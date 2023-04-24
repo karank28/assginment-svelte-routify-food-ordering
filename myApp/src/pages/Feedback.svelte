@@ -1,24 +1,23 @@
 <script lang="ts">
-    import suite from "../suite";
-    import Input from "../components/Input.svelte";
-    import ButtonSubmit from "../components/ButtonSubmit.svelte";
-    import classnames from "vest/classnames";
 
-    let formState = {};
+    import suite from "../feedback_suite";
+    import Input from "../feedbackComponents/Input.svelte";
+    import ButtonSubmit from "../feedbackComponents/ButtonSubmit.svelte";
+    import classnames from "vest/classnames";
+    import { feedbackStore } from "../stores/FeedbackStore";
+    import TextArea from "../ItemComponents/TextArea.svelte";
+
+    let formState : { 
+        name? : string, 
+        email? : string, 
+        feedback? : string 
+    } = {};
+
     let namePending = false;
     let result = suite.get();
 
-    const handleChange = name => {
-        result = suite(formState, name);
-
-        if (name === "name"){
-            namePending =true;
-        }
-
-        result.done(res => {
-            namePending =  false;
-            result = res;
-        });
+    const handleChange = (name) => {
+        result = suite(formState, name)
     };
 
     $: cn = classnames(result, {
@@ -28,11 +27,26 @@
     });
 
     $: disabled = !result.isValid();
-    
+
+    const initialFormState = {
+        name: '',
+        email: '',
+        feedback: ''
+    };
+
+    const handleSubmit = () => {
+        const { name, email, feedback } = formState;
+        const newFeedback = { name, email, feedback };
+        feedbackStore.update(feedbacks => [...feedbacks, newFeedback]);
+        window.alert("Feedback submitted successfully!");
+
+        formState = initialFormState;
+    };
+
 </script>
 
 <div class="w-full p-6 flex justify-between max-sm:flex-col">
-    <form on:submit|preventDefault action="" class="w-96 p-5 border-4 border-sky-400 rounded-2xl hover:border-amber-400 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
+    <form on:submit|preventDefault = {handleSubmit} action="" class="w-96 p-5 border-4 border-sky-400 rounded-2xl hover:border-amber-400 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
         <div class="my-5">
             <Input
                 name="name"
@@ -57,20 +71,20 @@
         </div>
 
         <div class="my-5">
-            <Input
-                name="contactnumber"
-                label="Contact Number"
-                bind:value = {formState.contactnumber}
+            <TextArea
+                name="feedback"
+                label="Your Feedback"
+                bind:value = {formState.feedback}
                 onInput={handleChange}
-                validityclass={cn('contactnumber')}
-                messages = {result.getErrors('contactnumber')}
+                validityclass={cn('feedback')}
+                messages = {result.getErrors('feedback')}
             />
         </div>
 
         <div class="mt-7 flex">
-            <input class="w-full bg-sky-500 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-amber-400 hover:text-black hover:shadow-xl max-sm:text-sm" type="submit" value="Submit">
-            <input class="w-full bg-sky-500 text-white font-bold ms-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-amber-400 hover:text-black hover:shadow-xl max-sm:text-sm" type="reset" value="Clear">
+            <ButtonSubmit {disabled}>Submit</ButtonSubmit>
         </div>
+
     </form>
 
     <div class="w-96 p-6 flex-rows text-lg border-4 border-sky-400 rounded-2xl hover:border-amber-400 hover:shadow-xl max-lg:w-2/4 max-sm:w-full max-sm:mt-5">
@@ -84,7 +98,36 @@
             <p class="text-base py-1 max-sm:text-sm">Binori B Square 1, 801, 8th floor, BRTS road</p>
             <p class="text-base py-1 max-sm:text-sm">Ambli Road, Ahmedabad</p>
             <p class="text-base py-1 max-sm:text-sm">Gujarat - 380058</p>
-
         </div>
     </div>
 </div>  
+
+<div class="">
+    <table class="productTable w-full text-sm text-left">
+        <thead class="product_th text-lg font-semibold max-sm:text-base">
+            <tr class="border-b-2 border-gray-500">
+                <th scope="col" class="px-6 py-3 fw-bold">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Email
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Feedback
+                </th>
+                
+            </tr>
+        </thead>
+
+        <tbody>
+            {#each $feedbackStore as feedback}
+              <tr>
+                <td>{feedback.name}</td>
+                <td>{feedback.email}</td>
+                <td>{feedback.feedback}</td>
+              </tr>
+            {/each}
+        </tbody>
+
+    </table>
+</div>
