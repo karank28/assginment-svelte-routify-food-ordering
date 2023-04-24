@@ -19,14 +19,14 @@ import { create, test, enforce, only } from 'vest';
             enforce(data.email).matches(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/);
         });
 
-        test('contactnumber', 'This field is required', () => {
-            enforce(data.contactnumber).isNotBlank();
+        test('feedback', 'This field is required', () => {
+            enforce(data.feedback).isNotBlank();
         });
 
-        test('contactnumber', 'Please enter a valid contact number', () => {
-            enforce(data.contactnumber).matches(/^(\+91|\+91\-|0)?[789]\d{9}$/)
+        test('feedback', 'Please enter a valid message', () => {
+            enforce(data.feedback).matches(/^[a-zA-Z ]+$/);
         });
-
+        
     });
 
 export default suite;
