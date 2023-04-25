@@ -46,12 +46,4 @@
 	  </div>
 	</nav>
 </header>
-<!-- <nav>
-  <ul>
-    <li><a href={Routes.Home}>Home</a></li>
-    <li><a href={Routes.YourOrders}>Your Orders</a></li>
-    <li><a href={Routes.Feedback}>Feedback</a></li>
-    <li><a href={Routes.Admin}>Admin</a></li>
-  </ul>
-</nav> -->
   
