@@ -8,14 +8,13 @@
     import Input from "../ItemComponents/Input.svelte";
     import TextArea from "../ItemComponents/TextArea.svelte";
     import ButtonSubmit from "../ItemComponents/ButtonSubmit.svelte";
-    import ButtonClear from "../ItemComponents/ButtonClear.svelte";
 
     let itemformState: {
-        item_id?
+        item_id? :number
         item_img?;
         item_name?: string;
         description?: string;
-        price?: string;
+        price?: number;
     } = {};
 
     let result = suite.get();
@@ -33,6 +32,7 @@
     $: disabled = !result.isValid();
 
     const initialFormState = {
+        item_id:"",
         item_img:"",
         item_name: "",
         description: "",
@@ -118,11 +118,10 @@
 
             <div class="mt-4 flex">
                 {#if selectedItemIndex !== null}
-                    <button {disabled} on:click={handleUpdate}>Update</button>
+                    <button class="w-full bg-sky-500 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-amber-400 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={handleUpdate}>Update</button>
                 {:else}
                     <ButtonSubmit {disabled}>Submit</ButtonSubmit>
                 {/if}
-                <ButtonClear>Cancel</ButtonClear>
             </div>
         </form>
     </div>
