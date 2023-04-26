@@ -18,7 +18,7 @@
     <hr class="h-px my-5 bg-gray-200 border-0" />
 
     <div class="text-3xl font-bold text-center">
-        List of Items
+        Explore the Taste!!
     </div>
     
     <hr class="h-px my-5 bg-gray-200 border-0" />
@@ -26,14 +26,14 @@
 </div>
 
 <div class="w-full p-6">
-    <div class="grid grid-cols-5 gap-5 max-lg:grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-2">
+    <div class="grid grid-cols-4 gap-5 max-lg:grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-2">
         {#each $foodstore as item}
-        <div class="w-full mx-3 p-6 border-4 border-sky-400 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-amber-400">
+        <div class="w-full mx-3 p-6 border-4 border-red-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-amber-400">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
-                <div>
-                    <img src="{item.item_img}" alt="" style="width: 100px;">
+                <div class="w-full">
+                    <img class="object-cover h-48 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
                 </div>
-                <div class="h-48 p-2">
+                <div class="h-40 p-2">
                     <div class="text-xl font-bold py-1">
                         {item.item_name}
                     </div>
@@ -43,10 +43,21 @@
                     <div class="flex py-1">
                         <div class="font-bold">Price:&nbsp;</div>{item.price}
                     </div>
+                    
                 </div>
-                <div class="inset-x-0 bottom-0">
-                    <Addtocart> Add to cart </Addtocart>
+                <div class="flex text-center">
+                    <div class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer  hover:bg-amber-400 hover:text-black hover:shadow-xl max-sm:text-sm">
+                        <a href="../itemdetails/?id={item.item_id}" class="">
+                            <div class="font-bold">View Details<i class="fa-solid fa-circle-info mx-2"></i></div>
+                        </a>
+                    </div>
+                    <div class="w-full">
+                        <Addtocart>
+                            <span>Add<i class="fa-solid fa-cart-plus mx-2"></i></span>
+                        </Addtocart>
+                    </div>
                 </div>
+                
                 
             </form>
         </div>

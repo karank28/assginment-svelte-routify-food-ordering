@@ -1,14 +1,30 @@
 <script lang="ts">
   import { Routes } from './enums/routes';
+  import { onMount } from "svelte";
   
   let showNavbar:boolean = false;
 	function toggleNavbar() {
 	  showNavbar = !showNavbar;
 	}
+
+	let showDropdown = false;
+
+  const toggleDropdown = () => {
+    showDropdown = !showDropdown;
+  };
+
+  onMount(() => {
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(".dropdown")) {
+        showDropdown = false;
+      }
+    });
+  });
 </script>
 
 <header class="w-full fixed top-0 z-10">
-	<nav class="items-center justify-between flex-wrap bg-sky-500">
+	<nav class="items-center justify-between flex-wrap bg-red-700">
 		<div class="w-full flex flex-shrink-0 items-center text-white mr-6 justify-between">
 			<div class="text-2xl p-5">
 				<a href={Routes.Home} class="hover:text-amber-400 cursor-pointer">
@@ -18,7 +34,13 @@
 					</div>
 				</a>
 			</div>
-		
+
+			<div class="p-5 transition-all">
+				<a href={Routes.Cart} class="flex px-3 py-2 border rounded text-white border-2 border-white hover:text-amber-400 hover:border-amber-400 transition-all">
+					<i class="fa-solid fa-cart-plus mx-2"></i>
+				</a>
+			</div>
+
 			<div class="block lg:hidden p-5 transition-all">
 				<button on:click={toggleNavbar} class="flex px-3 py-2 border rounded text-white border-2 border-white hover:text-amber-400 hover:border-amber-400 transition-all">
 					<i class="fa-solid fa-bars text-xl"><title>Menu</title></i>
@@ -40,9 +62,38 @@
         <a href={Routes.Feedback} class="w-full block lg:inline-block text-lg font-semibold text-white p-3 transition duration-400 lg:hover:bg-amber-400 hover:text-black max-lg:hover:text-amber-400 lg:hover:-translate-y-1 lg:hover:scale-110 max-lg:ml-5">Feedback</a>
       </div>
 
-      <div class="flex-auto p-0 cursor-pointer lg:hover:shadow-lg">
+      <!-- <div class="flex-auto p-0 cursor-pointer lg:hover:shadow-lg">
         <a href={Routes.Admin} class="w-full block lg:inline-block text-lg font-semibold text-white p-3 transition duration-400 lg:hover:bg-amber-400 hover:text-black max-lg:hover:text-amber-400 lg:hover:-translate-y-1 lg:hover:scale-110 max-lg:ml-5">Admin</a>
-      </div>
+		
+      </div> -->
+
+	  
+	<div class="relative inline-block dropdown flex-auto p-0 cursor-pointer lg:hover:shadow-lg">
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<div class="text-lg font-semibold text-white p-3 transition duration-400 lg:hover:bg-amber-400 hover:text-black max-lg:hover:text-amber-400 lg:hover:-translate-y-1 lg:hover:scale-110 max-lg:ml-5 focus:outline-none"
+		on:click={toggleDropdown}>Admin
+		</div>
+
+		{#if showDropdown}
+		<ul class="absolute z-10 right-0 mt-2 w-48 bg-white rounded-md shadow-lg">
+			<li>
+				<a href={Routes.Admin}
+					class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin
+				</a>
+			</li>
+			<li>
+			<a href={Routes.Cart}
+				class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+			>
+				Cart
+			</a>
+			</li>
+		</ul>
+		{/if}
+  </div>
+  
+  
+  
 	  </div>
 	</nav>
 </header>
