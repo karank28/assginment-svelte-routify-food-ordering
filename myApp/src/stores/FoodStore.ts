@@ -14,3 +14,4 @@ export const foodstore = writable([
     { item_id: 11, item_img: "../img/img11.jpg", item_name : "Cheezy-7-Pizza", description : "Cheezy-7-Pizza Description", quantity : 1 ,price : 600, newprice : 600 },
     { item_id: 12, item_img: "../img/img12.jpg", item_name : "English Retreat Pizza", description : "English Retreat Pizza Description", quantity : 1 ,price : 700, newprice : 700 }
 ]);
+

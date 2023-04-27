@@ -1,1 +1,0 @@
-<button type="submit" class="w-full bg-amber-400 text-black font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-600 hover:text-white hover:shadow-xl max-sm:text-sm"><slot /></button>

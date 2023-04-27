@@ -3,18 +3,22 @@
     import suite from "../item_suite";
     import classnames from "vest/classnames";
     import { foodstore } from "../stores/FoodStore";
-    import { feedbackStore } from "../stores/FeedbackStore";
 
     import Input from "../ItemComponents/Input.svelte";
     import TextArea from "../ItemComponents/TextArea.svelte";
-    import ButtonSubmit from "../ItemComponents/ButtonSubmit.svelte";
+    import InputPrice from "../ItemComponents/InputPrice.svelte";
+
+    import toastr from 'toastr';
+    import 'toastr/build/toastr.min.css';
 
     let itemformState: {
-        item_id? :number
+        item_id? :number;
         item_img?;
         item_name?: string;
         description?: string;
+        quantity?: number;
         price?: number;
+        newprice?: number;
     } = {};
 
     let result = suite.get();
@@ -32,20 +36,44 @@
     $: disabled = !result.isValid();
 
     const initialFormState = {
-        item_id:"",
-        item_img:"",
+        item_id: 0,
         item_name: "",
         description: "",
-        price: "",
+        price: null,
     };
 
-    const handleSubmit = () => {
-        const { item_id, item_img, item_name, description, price } = itemformState;
-        const newItems = { item_id, item_img, item_name, description, price };
-        foodstore.update((items) => [...items, newItems]);
-        window.alert("Items submitted successfully!");
+    let add_item_toggle : boolean = false;   
+    let update_item_toggle : boolean = false;
+    let delete_item_toggle : boolean = false;
 
-        itemformState = initialFormState;
+    function toggleForm(operation:string):void{
+        
+        if(operation === 'insert'){    
+            add_item_toggle = !add_item_toggle
+            
+            itemformState = {
+                item_id : 0,
+                item_name: "",
+                description: "",
+                price: null
+            }
+        }
+
+        if(operation === 'update'){
+            update_item_toggle = !update_item_toggle
+        }
+    }
+
+    function closeToggle():void {
+        add_item_toggle = !add_item_toggle
+        
+    }
+    const handleSubmit = (item) => {
+        const { item_id, item_img, item_name, description, quantity, price , newprice } = itemformState;
+        const newItem = { item_id, item_img, item_name, description, quantity, price , newprice };
+        
+        foodstore.update((items) => [...items, newItem]);
+        toastr.success("Item Added successfully!");
     };
 
     let selectedItemIndex = null;
@@ -56,94 +84,158 @@
     };
 
     const handleUpdate = () => {
-        const { item_id, item_img, item_name, description, price } = itemformState;
-        const updatedItem = { item_id, item_img, item_name, description, price };
+        const { item_id, item_img, item_name, description, quantity, price , newprice } = itemformState;
+        const updatedItem = { item_id, item_img, item_name, description, quantity, price , newprice };
         foodstore.update((items) =>
-        items.map((item, index) =>
-            index === selectedItemIndex ? updatedItem : item
-        )
+            items.map((item, index) =>
+                index === selectedItemIndex ? updatedItem : item
+            )
         );
-        window.alert("Item updated successfully!");
+        toastr.success("Item updated successfully!");
 
         itemformState = initialFormState;
         selectedItemIndex = null;
     };
 
     const handleDelete = (index) => {
-        if (window.confirm("Are you sure you want to delete this item?")) {
-            foodstore.update((items) => items.filter((_, i) => i !== index));
-        }
+        foodstore.update((items) => items.filter((_, i) => i !== index));
+        toastr.success(`Item deleted successfully!`)
     };
 
 </script>
 
 <div class="w-full p-6">
-    <div class="w-96 p-5 border-4 border-sky-400 rounded-2xl hover:border-amber-400 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
-        <form on:submit|preventDefault={handleSubmit} action="#">
-            <div class="my-3">
-                <!-- svelte-ignore missing-declaration -->
-                <Input
-                    name="item_name"
-                    label="Item Name"
-                    bind:value={itemformState.item_name}
-                    onInput={handleChange}
-                    validityclass={cn("item_name")}
-                    messages={result.getErrors("item_name")}
-                />
-            </div>
-
-            <div class="my-3">
-                <!-- svelte-ignore missing-declaration -->
-                <TextArea
-                    name="description"
-                    label="Description"
-                    bind:value={itemformState.description}
-                    onInput={handleChange}
-                    validityclass={cn("description")}
-                    messages={result.getErrors("description")}
-                />
-            </div>
-
-            <div class="my-3">
-                <!-- svelte-ignore missing-declaration -->
-                <Input
-                    name="price"
-                    label="Price"
-                    bind:value={itemformState.price}
-                    onInput={handleChange}
-                    validityclass={cn("price")}
-                    messages={result.getErrors("price")}
-                />
-            </div>
-
-            <div class="mt-4 flex">
-                {#if selectedItemIndex !== null}
-                    <button class="w-full bg-sky-500 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-amber-400 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={handleUpdate}>Update</button>
-                {:else}
-                    <ButtonSubmit {disabled}>Submit</ButtonSubmit>
-                {/if}
-            </div>
-        </form>
+    <div class="flex justify-end z-[-1]"> 
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-1/2 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new items</div> 
     </div>
+</div>
 
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-
-    <div class="text-3xl font-bold text-center">
-        List of Items
-    </div>
-
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-
-    <div class="w-full p-6">
-        <div class="grid grid-cols-5 gap-5 max-lg:grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-2">
-
-            {#each $foodstore as item, index}
-            <div class="w-full mx-3 p-6 border-4 border-sky-400 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-amber-400">
-
-                <div>
-                    <img src="{item.item_img}" alt="" style="width: 100px;">
+<div class="w-full">
+    <div class="{add_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
+        <div class="w-full mt-48 flex justify-center">
+            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
+        
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div on:click={()=> toggleForm('insert')} class="my-1 text-end cursor-pointer text-lg">
+                    <i class="fa-solid fa-xmark"></i>
                 </div>
-                <div class="h-48 p-2">
+                <form on:submit|preventDefault={handleSubmit} action="#">
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <Input
+                            name="item_name"
+                            label="Item Name"
+                            bind:value={itemformState.item_name}
+                            onInput={handleChange}
+                            validityclass={cn("item_name")}
+                            messages={result.getErrors("item_name")}
+                        />
+                    </div>
+    
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <TextArea
+                            name="description"
+                            label="Description"
+                            bind:value={itemformState.description}
+                            onInput={handleChange}
+                            validityclass={cn("description")}
+                            messages={result.getErrors("description")}
+                        />
+                    </div>
+    
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <InputPrice
+                            name="price"
+                            label="Price"
+                            bind:value={itemformState.price}
+                            onInput={handleChange}
+                            validityclass={cn("price")}
+                            messages={result.getErrors("price")}
+                        />
+                    </div>
+    
+                    <div class="mt-4">
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={closeToggle}>Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="{update_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
+        <div class="w-full mt-48 flex justify-center">
+            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
+        
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div on:click={()=> toggleForm('update')} class="my-1 text-end cursor-pointer text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+                <form on:submit|preventDefault={handleUpdate} action="#">
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <Input
+                            name="item_name"
+                            label="Item Name"
+                            bind:value={itemformState.item_name}
+                            onInput={handleChange}
+                            validityclass={cn("item_name")}
+                            messages={result.getErrors("item_name")}
+                        />
+                    </div>
+    
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <TextArea
+                            name="description"
+                            label="Description"
+                            bind:value={itemformState.description}
+                            onInput={handleChange}
+                            validityclass={cn("description")}
+                            messages={result.getErrors("description")}
+                        />
+                    </div>
+    
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <InputPrice
+                            name="price"
+                            label="Price"
+                            bind:value={itemformState.price}
+                            onInput={handleChange}
+                            validityclass={cn("price")}
+                            messages={result.getErrors("price")}
+                        />
+                    </div>
+    
+                    <div class="mt-4 flex">
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" on:click={()=> toggleForm('update')}>Update</button>  
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w-full px-6">
+    <hr class="h-px my-5 bg-gray-200 border-0" />
+    <div class="text-3xl font-bold text-center">
+        List of Items<i class="fa-solid fa-utensils mx-2"></i> 
+    </div>
+    <hr class="h-px my-5 bg-gray-200 border-0" />
+</div>
+<div class="w-full p-6">
+    
+    <div class="grid grid-cols-4 gap-5 max-lg:grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-2">
+        {#each $foodstore as item, index}
+        <div class="w-full mx-3 p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-pointer hover:shadow-xl hover:border-green-600">
+            <form on:submit|preventDefault={() => handleSubmit(item)} action="">
+                <div class="w-full">
+                    <img class="object-cover h-48 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
+                </div>
+                <div class="h-40 p-2">
                     <div class="text-xl font-bold py-1">
                         {item.item_name}
                     </div>
@@ -155,61 +247,24 @@
                     </div>
                 </div>
 
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={() => handleEdit(index)} class="w-12 me-1 text-2xl text-sky-800 hover:text-black hover:bg-sky-400 rounded-xl transition duration-400 cursor-pointer max-sm:me-0 max-sm:text-base">
-                    <i class="p-2 fa-regular fa-pen-to-square" />
-                </div>
+                <div class="flex text-center">
 
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={() => handleDelete(index)}
-                    class="w-12 text-2xl text-red-800 hover:text-black hover:bg-sky-400 rounded-xl transition duration-400 cursor-pointer max-sm:text-base">
-                    <i class="p-2 fa-regular fa-trash-can" />
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <div on:click={()=> {toggleForm('update'), handleEdit(index)}} class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer  hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm">
+                        <div class="font-bold">Edit<i class="p-2 fa-regular fa-pen-to-square" /></div>
+                        
+                    </div>
+    
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <div on:click={() => handleDelete(index)}
+                        class="w-full bg-amber-400 text-black font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-600 hover:text-white hover:shadow-xl max-sm:text-sm">
+                        <div class="font-bold">Delete<i class="p-2 fa-regular fa-trash-can" /></div>
+                    </div>
                 </div>
-            </div>           
-            {/each}
+            </form>
         </div>
+        {/each}    
     </div>
-
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-
-    <div class="text-3xl font-bold text-center">
-        Responses of Feedback Forms
-    </div>
-
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-
-    <div class="w-full p-6">
-
-        <table class="w-full text-sm text-left">
-            <thead class="text-lg font-semibold max-sm:text-base">
-                <tr class="border-b-2 border-gray-500">
-                    <th scope="col" class="px-6 py-3 fw-bold"> Name </th>
-                    <th scope="col" class="px-6 py-3"> Email </th>
-                    <th scope="col" class="px-6 py-3"> Feedback </th>
-                </tr>
-            </thead>
-    
-            <tbody>
-                {#each $feedbackStore as feedback}
-                    <tr
-                    class="border-b border-gray-500 max-sm:border-b-2 max-sm:border-gray-500 max-sm:mb-12"
-                    >
-                    <td data-th="Name" class="px-6 py-4">
-                        {feedback.name}
-                    </td>
-                    <td data-th="Description" class="px-6 py-4">
-                        {feedback.email}
-                    </td>
-                    <td data-th="Price" class="px-6 py-4 max-sm:font-bold">
-                        {feedback.feedback}
-                    </td>
-                    </tr>
-                {/each}
-            </tbody>
-    
-        </table>
-    </div>
-
 </div>
 
 

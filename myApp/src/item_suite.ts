@@ -8,7 +8,7 @@ import { create, test, enforce, only } from 'vest';
         });
     
         test('item_name', 'Please enter a valid name.', () => {
-            enforce(data.item_name).matches(/^[A-Za-z][A-Za-z]*$/);
+            enforce(data.item_name).matches(/^[A-Za-z]/);
         });
         
         test('description', 'This field is required', () => {
@@ -16,7 +16,7 @@ import { create, test, enforce, only } from 'vest';
         });
 
         test('description', 'Please enter a valid message.', () => {
-            enforce(data.description).matches(/^[A-Za-z][A-Za-z]*$/);
+            enforce(data.description).matches(/^[A-Za-z]/);
         });
 
         test('price', 'This field is required', () => {

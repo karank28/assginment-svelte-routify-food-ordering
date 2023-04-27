@@ -1,7 +1,10 @@
 <script lang="ts">
     import * as _ from "lodash";
     import { cartstore } from '../stores/CartStore';
-  import { orderstore } from "../stores/OrderStore";
+    import { orderstore } from "../stores/OrderStore";
+
+    import toastr from 'toastr';
+    import 'toastr/build/toastr.min.css';
 
     let cartItems;
     cartstore.subscribe(value => {
@@ -10,13 +13,12 @@
 
     const handleSubmit = (item) => {
         orderstore.update((items) => [...items, item]);
-        window.alert("Order Confiremd!");
+        toastr.success("Order Confiremd!");
     };
 
     const handleDelete = (index) => {
-        if (window.confirm("Are you sure you want to remove this from cart?")) {
-            cartstore.update((items) => items.filter((_, i) => i !== index));
-        }
+        cartstore.update((items) => items.filter((_, i) => i !== index));
+        toastr.success("Item removed from cart!")
     };
 </script>
 
@@ -28,12 +30,17 @@
     <hr class="h-px my-5 bg-gray-200 border-0" />
 
     {#if cartItems.length === 0}
-        <div class="text-xl font-bold text-center py-5">
-            Your cart is empty!!
+    <div class="flex flex-col items-center">
+        <div class="text-xl font-bold py-5">
+            Empty!!
         </div>
+        <div class="w-full">
+            <img class="block mx-auto rounded-lg" src="./img/empty.png" alt="">
+        </div>
+    </div>  
     {:else}
         {#each $cartstore as item, index}
-        <div class="w-full mb-2 p-6 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-200">
+        <div class="w-full mb-2 p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-200">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
                 <div class="w-full grid grid-flow-col text-center">
                     
