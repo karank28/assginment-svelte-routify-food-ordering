@@ -2,8 +2,10 @@
     import * as _ from "lodash";
     import { foodstore } from '../stores/FoodStore';
     import { cartstore } from "../stores/CartStore";
-    import Addtocart from '../ItemComponents/Addtocart.svelte';
     import { Routes } from "../enums/routes";
+
+    import toastr from 'toastr';
+    import 'toastr/build/toastr.min.css';
 
     let url = window.location.search;
     let urlData = new URLSearchParams(url)
@@ -23,13 +25,14 @@
         const newPrice = count * item_details.price;
         const itemPrice = { ...quantity, newprice: newPrice };
         cartstore.update((items) => [...items, itemPrice]);
-        window.alert("Added to cart successfully!");
+        toastr.success('Added to cart successfully!')
+
     };
     
 </script>
 
 <div class="w-full p-6">
-    <div class="mx-3 p-6 border-4 border-sky-400 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-amber-400">
+    <div class="mx-3 p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
         
         <form on:submit|preventDefault={() => handleSubmit()} >
             <div class="grid grid-cols-3 gap-3">
@@ -66,18 +69,18 @@
                             </div>
                             <hr class="my-2" />
                             <div class="text-lg">
-                                {item_details.newprice * count}
+                                {item_details.price * count}
                             </div>
                         </div>
                     </div>
                 
                     <div class="flex text-center">
-                        <a href="{Routes.Home}" class="w-full bg-sky-500 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer  hover:bg-amber-400 hover:text-black hover:shadow-xl max-sm:text-sm">
+                        <a href="{Routes.Home}" class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:shadow-xl max-sm:text-sm">
                             <div class="font-bold"><i class="fa-solid fa-angles-left mx-1"></i>Back to Menu</div>
                         </a>
                         
                         <div class="w-full">
-                            <Addtocart> <span>Add<i class="fa-solid fa-cart-plus mx-2"></i></span> </Addtocart>
+                            <button type="submit" class="w-full bg-amber-400 text-black font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-white hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus mx-2"></i></span></button>
                         </div>
                     </div>
                 </div>

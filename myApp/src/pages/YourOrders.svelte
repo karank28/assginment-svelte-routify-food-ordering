@@ -2,15 +2,17 @@
     import * as _ from "lodash";
     import { orderstore } from "../stores/OrderStore";
 
+    import toastr from 'toastr';
+    import 'toastr/build/toastr.min.css';
+
     let orderItems;
     orderstore.subscribe(value => {
       orderItems = value;
     });
 
     const handleDelete = (index) => {
-        if (window.confirm("Are you sure you want to cancel order?")) {
-            orderstore.update((items) => items.filter((_, i) => i !== index));
-        }
+        orderstore.update((items) => items.filter((_, i) => i !== index));
+        toastr.success("Oreder Cancelled!")
     };
 </script>
 
@@ -18,20 +20,24 @@
 
     <div class="text-3xl font-bold text-center">
         Your Orders!!
-        <!-- <i class="fa-solid fa-list-check mx-2"></i> -->
     </div>
 
     <hr class="h-px my-5 bg-gray-200 border-0" />
     
     {#if orderItems.length === 0}
-        <div class="text-xl font-bold text-center py-5">
+    <div class="flex flex-col items-center">
+        <div class="text-xl font-bold py-5">
             Empty!!
         </div>
+        <div class="w-full">
+            <img class="block mx-auto rounded-lg" src="./img/empty.png" alt="">
+        </div>
+    </div>      
+        
     {:else}
-    <hr class="h-px my-5 bg-gray-200 border-0" />
 
         {#each $orderstore as item, index}
-            <div class="w-full mb-2 p-6 border-4 border-sky-400 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-amber-400">
+            <div class="w-full mb-2 p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-200">
                 <form action="">
                     <div class="w-full grid grid-flow-col text-center">
                         
