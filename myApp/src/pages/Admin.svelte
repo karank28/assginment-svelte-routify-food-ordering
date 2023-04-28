@@ -104,10 +104,10 @@
 
 </script>
 
-<div class="w-full p-6">
-    <div class="flex justify-end z-[-1]"> 
+<div class="w-full p-6 ">
+    <div class="flex justify-end z-[-1] my-3 max-lg:-mt-9"> 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-1/2 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new items</div> 
+        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold uppercase text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-1/2 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new item</div> 
     </div>
 </div>
 
@@ -158,7 +158,7 @@
                     </div>
     
                     <div class="mt-4">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={closeToggle}>Submit</button>
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={closeToggle}>Submit</button>
                     </div>
                 </form>
             </div>
@@ -211,7 +211,7 @@
                     </div>
     
                     <div class="mt-4 flex">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" on:click={()=> toggleForm('update')}>Update</button>  
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" on:click={()=> toggleForm('update')}>Update</button>  
                     </div>
                 </form>
             </div>
@@ -219,18 +219,18 @@
     </div>
 </div>
 
-<div class="w-full px-6">
+<div class="w-full px-6 max-lg:-mt-9">
     <hr class="h-px my-5 bg-gray-200 border-0" />
     <div class="text-3xl font-bold text-center">
         List of Items<i class="fa-solid fa-utensils mx-2"></i> 
     </div>
     <hr class="h-px my-5 bg-gray-200 border-0" />
 </div>
-<div class="w-full p-6">
-    
-    <div class="grid grid-cols-4 gap-5 max-lg:grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-2">
+
+<div class="w-full p-6 max-sm:-mt-7">
+    <div class="grid justify-center items-center xl:grid-cols-4 gap-5 lg:grid-cols-3 md:grid-cols-2 max-sm:grid-cols-1">
         {#each $foodstore as item, index}
-        <div class="w-full mx-3 p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-pointer hover:shadow-xl hover:border-green-600">
+        <div class="w-full p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-pointer hover:shadow-xl hover:border-green-600">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
                 <div class="w-full">
                     <img class="object-cover h-48 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
@@ -248,17 +248,14 @@
                 </div>
 
                 <div class="flex text-center">
-
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <div on:click={()=> {toggleForm('update'), handleEdit(index)}} class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer  hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm">
-                        <div class="font-bold">Edit<i class="p-2 fa-regular fa-pen-to-square" /></div>
-                        
+                    <div on:click={()=> {toggleForm('update'), handleEdit(index)}} class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-orange-700 hover:shadow-xl max-sm:text-sm">
+                        <div class="font-bold uppercase">Edit<i class="fa-regular fa-pen-to-square ms-2" /></div>
                     </div>
-    
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
                     <div on:click={() => handleDelete(index)}
-                        class="w-full bg-amber-400 text-black font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-600 hover:text-white hover:shadow-xl max-sm:text-sm">
-                        <div class="font-bold">Delete<i class="p-2 fa-regular fa-trash-can" /></div>
+                        class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:shadow-xl max-sm:text-sm">
+                        <div class="font-bold uppercase">Delete<i class="fa-regular fa-trash-can ms-2" /></div>
                     </div>
                 </div>
             </form>

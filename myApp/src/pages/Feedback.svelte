@@ -46,7 +46,7 @@
 
 </script>
 
-<div class="w-full p-6">
+<div class="w-full p-6 max-lg:-mt-9">
     <div class="text-3xl font-bold text-center">
         Feedback
     </div>
@@ -90,7 +90,7 @@
         </div>
 
         <div class="mt-7 flex">
-            <button type="submit" class="w-full bg-slate-700 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" disabled={disabled}>Submit</button>
+            <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" disabled={disabled}>Submit</button>
         </div>
 
     </form>

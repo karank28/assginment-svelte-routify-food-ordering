@@ -16,7 +16,7 @@
     };
 </script>
 
-<div class="w-full p-6">
+<div class="w-full p-6 max-lg:-mt-9">
 
     <div class="text-3xl font-bold text-center">
         Your Orders!!
@@ -37,50 +37,56 @@
     {:else}
 
         {#each $orderstore as item, index}
-            <div class="w-full mb-2 p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-default hover:bg-slate-200">
+            <div class="w-full p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
                 <form action="">
-                    <div class="w-full grid grid-flow-col text-center">
-                        
-                        <div class="flex text-start">
-                            
-                            <img class="object-cover w-40 h-20 rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
-                            
-                            <div class="mx-5">
-                                <div class="text-xl font-bold py-1">{item.item_name}</div>
-                                <div>{item.description}</div>
-                            </div>
+                    <div class="flex gap-5 max-md:flex-col">
 
+                        <div class="w-1/2 max-md:w-full">
+                            <img class="object-cover h-60 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
                         </div>
                         
-                        <div class="px-2">
-                            <div class="text-xl font-bold">
-                                Quantity
+                        <div class="w-full flex flex-col">
+                            <div class="h-48">
+                                <div class="text-3xl font-bold py-1">
+                                    {item.item_name}
+                                </div>
+                                <div class="text-lg py-1">
+                                    {item.description}
+                                </div>
+            
+                                <div class="flex py-1">
+            
+                                    <div class="text-xl font-bold">
+                                        Quantity: &nbsp;
+                                    </div>
+            
+                                    <div class=" text-lg py-1">
+                                        {item.quantity}
+                                    </div>
+                                    
+                                </div>
+    
+                                <div class="flex">
+                                    <div class="text-xl font-bold">
+                                        Price: &nbsp;
+                                    </div>
+                                    <div class="text-lg">
+                                        {item.newprice}
+                                    </div>
+                                </div>
                             </div>
-                            <hr class="my-2" />
-                            <div class="text-lg">
-                                <span>{item.quantity}</span>
-                            </div>
-                            
-                        </div>
-                        <div class="px-2">
-                            <div class="text-xl font-bold">
-                                Price
-                            </div>
-                            <hr class="my-2" />
-                            <div class="text-lg">
-                                {item.newprice}
-                            </div>
-                        </div>
+    
+                            <div class="w-1/2 flex text-center max-md:w-full max-sm:w-full">
 
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <div class="px-2 flex items-center">
-                            <div on:click={() => handleDelete(index)}
-                                class="w-full bg-red-600 rounded-lg text-xl text-white font-bold p-2 cursor-pointer">
-                                <i class="p-2 fa-regular fa-trash-can" />
-                                <span>Cancel Order</span>
+                                <div class="w-full mx-1 max-sm:me-0">
+                                    <button on:click={() => handleDelete(index)} 
+                                        class="w-full bg-red-600 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:text-white hover:shadow-xl max-sm:text-sm">
+                                        <i class="fa-regular fa-trash-can ms-2" />
+                                        <span>Cancel order</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        
                     </div>  
                 </form>
             </div>

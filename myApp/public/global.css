@@ -1,3 +1,25 @@
 body{
 	padding: 7.7rem 0 3rem 0 !important;
 }
+
+@media screen and (max-width: 48em) {
+    thead{
+        display: none;
+    }
+
+    th,  td {
+        display: block;
+    }
+
+	tr td{
+		display: block;
+		text-align: start;
+	}
+
+	td[data-th]:before  {
+        content: attr(data-th);
+		font-weight: bold;
+		margin-right: 10px;
+    }
+
+}
