@@ -26,18 +26,17 @@
         const itemPrice = { ...quantity, newprice: newPrice };
         cartstore.update((items) => [...items, itemPrice]);
         toastr.success('Added to cart successfully!')
-
     };
     
 </script>
 
-<div class="w-full p-6">
+<div class="w-full p-6 max-lg:-mt-9">
     <div class="mx-3 p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
         
         <form on:submit|preventDefault={() => handleSubmit()} >
-            <div class="grid grid-cols-3 gap-3">
+            <div class="grid grid-cols-3 gap-3 max-xl:grid-cols-2 max-md:grid-cols-1">
                 
-                <div class="">
+                <div class="w-full">
                     <img class="object-cover h-60 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item_details.item_img}" alt="">
                 </div>
 
@@ -51,7 +50,7 @@
                         </div>
     
                         <div class="flex py-1">
-    
+
                             <div class="text-xl font-bold">
                                 Quantity: &nbsp;
                             </div>
@@ -74,13 +73,13 @@
                         </div>
                     </div>
                 
-                    <div class="flex text-center">
-                        <a href="{Routes.Home}" class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:shadow-xl max-sm:text-sm">
-                            <div class="font-bold"><i class="fa-solid fa-angles-left mx-1"></i>Back to Menu</div>
+                    <div class="flex text-center uppercase">
+                        <a href="{Routes.Home}" class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-orange-700 hover:shadow-xl max-sm:text-sm">
+                            <div class="font-bold"><i class="fa-solid fa-angles-left me-2"></i>Menu</div>
                         </a>
                         
                         <div class="w-full">
-                            <button type="submit" class="w-full bg-amber-400 text-black font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-white hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus mx-2"></i></span></button>
+                            <button type="submit" class="w-full bg-amber-400 text-black font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-amber-500 hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus ms-2"></i></span></button>
                         </div>
                     </div>
                 </div>

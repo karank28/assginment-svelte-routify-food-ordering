@@ -36,9 +36,9 @@
 
 </script>
 
-<div class="w-full relative text-center cursor-default drop-shadow-xl  ">
+<div class="w-full relative text-center cursor-default drop-shadow-xl -mt-2 max-lg:-mt-14">
     <!-- svelte-ignore a11y-img-redundant-alt -->
-    <img class="object-fill h-96 w-full opacity-150" src="{images[currentIndex]}" alt="image description">
+    <img class="object-fill h-96 w-full opacity-150 max-lg:h-64 max-md:h-48 max-sm:h-32 " src="{images[currentIndex]}" alt="image description">
 </div>
 
 <div class="w-full p-6">
@@ -46,14 +46,14 @@
     <div class="text-3xl font-bold text-center">
         Explore the Taste<i class="fa-solid fa-utensils mx-2"></i> 
     </div>
-    <hr class="h-px my-5 bg-gray-200 border-0" />
+    <hr class="h-px my-5 bg-gray-200 border-0 md:my-2 sm:my-1" />
 </div>
 
-<div class="w-full p-6">
-    <div class="grid grid-cols-4 gap-5 max-lg:grid-cols-3 max-md:grid-cols-3 max-sm:grid-cols-2">
+<div class="w-full p-6 max-sm:-mt-10">
+    <div class="grid justify-center items-center xl:grid-cols-4 gap-5 lg:grid-cols-3 md:grid-cols-2 max-sm:grid-cols-1">
         {#each $foodstore as item}
         
-        <div class="w-full mx-3 p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-pointer hover:shadow-xl hover:border-green-600">
+        <div class="w-full p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 hover:shadow-xl hover:border-green-600">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
                 <div class="w-full">
                     <img class="object-cover h-48 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
@@ -69,14 +69,14 @@
                         <div class="font-bold">Price:&nbsp;</div>{item.price}
                     </div>
                 </div>
-                <div class="flex text-center">
-                    <div class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:shadow-xl max-sm:text-sm">
+                <div class="flex text-center uppercase">
+                    <div class="w-full bg-orange-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-orange-700 hover:shadow-xl max-sm:text-sm">
                         <a href="../itemdetails/?id={item.item_id}" class="">
-                            <div class="font-bold">View Details<i class="fa-solid fa-circle-info mx-2"></i></div>
+                            <span>Details<i class="fa-solid fa-circle-info ms-2"></i></span>
                         </a>
                     </div>
                     <div class="w-full">
-                        <button type="submit" class="w-full bg-amber-400 text-black font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-white hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus mx-2"></i></span></button>
+                        <button type="submit" class="w-full bg-amber-400 text-black font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-amber-500 hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus ms-2"></i></span></button>
                     </div>
                 </div>
             </form>   
