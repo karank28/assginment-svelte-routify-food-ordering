@@ -4,7 +4,7 @@
     
 </script>
 
-<div class="w-full p-6 max-lg:-mt-9">
+<div class="w-full p-6">
 
     <div class="text-3xl font-bold text-center">
         Responses of Feedback Forms

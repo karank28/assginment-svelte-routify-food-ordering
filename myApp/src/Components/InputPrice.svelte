@@ -1,7 +1,7 @@
 <script lang="ts">
     export let value: number = 0;
-    export let label: string = "";
-    export let name: string = "";
+    export let label: string = null;
+    export let name: string = null;
     export let pending: boolean = false;
     export let messages: string[] = [];
     export let validityclass: string;

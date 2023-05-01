@@ -36,7 +36,7 @@
 
 </script>
 
-<div class="w-full relative text-center cursor-default drop-shadow-xl -mt-2 max-lg:-mt-14">
+<div class="w-full relative text-center cursor-default drop-shadow-xl mt-5">
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img class="object-fill h-96 w-full opacity-150 max-lg:h-64 max-md:h-48 max-sm:h-32 " src="{images[currentIndex]}" alt="image description">
 </div>

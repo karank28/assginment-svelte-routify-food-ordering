@@ -1,12 +1,12 @@
 <script lang="ts">
     import * as _ from "lodash";
-    import suite from "../item_suite";
+    import suite from "../validation/item_suite";
     import classnames from "vest/classnames";
     import { foodstore } from "../stores/FoodStore";
 
-    import Input from "../ItemComponents/Input.svelte";
-    import TextArea from "../ItemComponents/TextArea.svelte";
-    import InputPrice from "../ItemComponents/InputPrice.svelte";
+    import Input from "../Components/Input.svelte";
+    import TextArea from "../Components/TextArea.svelte";
+    import InputPrice from "../Components/InputPrice.svelte";
 
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
@@ -44,7 +44,6 @@
 
     let add_item_toggle : boolean = false;   
     let update_item_toggle : boolean = false;
-    let delete_item_toggle : boolean = false;
 
     function toggleForm(operation:string):void{
         
@@ -62,6 +61,7 @@
         if(operation === 'update'){
             update_item_toggle = !update_item_toggle
         }
+        
     }
 
     function closeToggle():void {
@@ -105,7 +105,7 @@
 </script>
 
 <div class="w-full p-6 ">
-    <div class="flex justify-end z-[-1] my-3 max-lg:-mt-9"> 
+    <div class="flex justify-end z-[-1] my-3"> 
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold uppercase text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-1/2 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new item</div> 
     </div>
@@ -211,7 +211,7 @@
                     </div>
     
                     <div class="mt-4 flex">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" on:click={()=> toggleForm('update')}>Update</button>  
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={()=> toggleForm('update')}>Update</button>  
                     </div>
                 </form>
             </div>

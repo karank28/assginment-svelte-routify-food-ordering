@@ -22,7 +22,7 @@
     };
 </script>
 
-<div class="w-full p-6 max-lg:-mt-9">
+<div class="w-full p-6">
     <div class="text-3xl font-bold text-center">
         Cart list <i class="fa-solid fa-cart-plus mx-2"></i>
     </div>
