@@ -30,7 +30,7 @@
     
 </script>
 
-<div class="w-full p-6 max-lg:-mt-9">
+<div class="w-full p-6">
     <div class="mx-3 p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
         
         <form on:submit|preventDefault={() => handleSubmit()} >

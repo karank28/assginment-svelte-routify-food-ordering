@@ -1,10 +1,10 @@
 <script lang="ts">
 
-    import suite from "../feedback_suite";
-    import Input from "../feedbackComponents/Input.svelte";
+    import suite from "../validation/feedback_suite";
+    import Input from "../Components/Input.svelte";
     import classnames from "vest/classnames";
     import { feedbackStore } from "../stores/FeedbackStore";
-    import TextArea from "../ItemComponents/TextArea.svelte";
+    import TextArea from "../Components/TextArea.svelte";
 
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
@@ -46,7 +46,7 @@
 
 </script>
 
-<div class="w-full p-6 max-lg:-mt-9">
+<div class="w-full p-6">
     <div class="text-3xl font-bold text-center">
         Feedback
     </div>

@@ -1,7 +1,7 @@
 <script lang="">
-    export let value = "";
-    export let label = "";
-    export let name ="";
+    export let value = null;
+    export let label = null;
+    export let name = null;
     export let pending = false;
     export let messages = [];
     export let validityclass;
