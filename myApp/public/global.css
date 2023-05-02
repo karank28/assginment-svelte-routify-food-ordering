@@ -1,9 +1,8 @@
 body{
-	padding: 3rem 0 !important;
-    overflow: visible;
+	padding: 4.2rem 0 !important;
 }
 
-.popup-open Body{
+body .popup{
     overflow: hidden;
 }
 

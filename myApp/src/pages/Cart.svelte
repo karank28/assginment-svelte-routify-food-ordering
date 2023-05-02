@@ -8,39 +8,63 @@
 
     let cartItems;
     cartstore.subscribe(value => {
-      cartItems = value;
+        cartItems = value;
     });
 
+    let existingItem:any ;
     const handleSubmit = (item) => {
-        orderstore.update((items) => [...items, item]);
-        toastr.success("Order Confiremd!");
+        
+        orderstore.subscribe((items) => {
+            existingItem = items.find((i) => i.item_id === item.item_id);
+        });
+
+        if (existingItem) {
+            const updatedItem = {
+                ...existingItem,
+                quantity: item.quantity,
+            };
+            orderstore.update((items) =>
+                items.map((i) => (i.item_id === item.item_id ? updatedItem : i))
+            );
+            toastr.options.positionClass = 'toast-bottom-right'
+            toastr.success("Already Order Confiremd!");
+        }
+        else {
+            orderstore.update((items) => [...items, item]);
+            toastr.options.positionClass = 'toast-bottom-right'
+            toastr.success("Order Confiremd!");
+        }
+
     };
 
     const handleDelete = (index) => {
         cartstore.update((items) => items.filter((_, i) => i !== index));
+        toastr.options.positionClass = 'toast-bottom-right'
         toastr.success("Item removed from cart!")
     };
 </script>
 
-<div class="w-full p-6">
-    <div class="text-3xl font-bold text-center">
+<div class="w-full">
+    <div class="border-y-2 text-3xl font-bold text-center py-4">
         Cart list <i class="fa-solid fa-cart-plus mx-2"></i>
     </div>
+</div>
 
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-
+<div class="w-full p-6">
     {#if cartItems.length === 0}
     <div class="flex flex-col items-center">
-        <div class="text-xl font-bold py-5">
-            Empty!!
-        </div>
+         <div class="flex flex-col items-center">
         <div class="w-full">
             <img class="block mx-auto rounded-lg" src="./img/empty.png" alt="">
         </div>
+        <div class="text-xl font-bold py-5">
+            It's Empty!!
+        </div>
+    </div>   
     </div>  
     {:else}
         {#each $cartstore as item, index}
-        <div class="w-full p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
+        <div class="w-full p-6 border-b-2 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
                 <div class="flex gap-5 max-md:flex-col">
                     
@@ -58,13 +82,19 @@
                             </div>
         
                             <div class="flex py-1">
-        
+
                                 <div class="text-xl font-bold">
                                     Quantity: &nbsp;
                                 </div>
         
                                 <div class=" text-lg py-1">
-                                    {item.quantity}
+                                    <button type="button" on:click={()=>{ (item.quantity <=1 )? '' : item.quantity --; }}>
+                                        <span class="border-2 px-2 rounded-lg">-</span>
+                                    </button>
+                                    <span>{item.quantity}</span>
+                                    <button type="button" on:click={()=>{item.quantity++;}}>
+                                        <span class="border-2 px-2 rounded-lg">+</span>
+                                    </button>
                                 </div>
                                 
                             </div>
@@ -74,7 +104,7 @@
                                     Price: &nbsp;
                                 </div>
                                 <div class="text-lg">
-                                    {item.newprice}
+                                    {item.price * item.quantity}
                                 </div>
                             </div>
                         </div>
@@ -99,8 +129,6 @@
                     </div>  
                 </form>
             </div>
-            <hr class="h-px my-5 bg-gray-200 border-0" />
         {/each}   
-        
     {/if} 
 </div>

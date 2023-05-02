@@ -4,27 +4,26 @@
     
 </script>
 
-<div class="w-full p-6">
-
-    <div class="text-3xl font-bold text-center">
-        Responses of Feedback Forms
+<div class="w-full">
+    <div class="border-y-2 text-3xl font-bold text-center py-4">
+        Responses of Feedback Forms<i class="fa-regular fa-comment-dots mx-2"></i>
     </div>
+</div>
 
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-
-    <table class="w-full text-sm text-left border-2 rounded-xl border-gray-500">
+<div class="w-full p-6">
+    <table class="w-full text-sm text-left rounded-xl">
         <thead class="text-lg font-semibold max-sm:text-base">
             <tr class="border-b-2 border-gray-500">
-                <th scope="col" class="px-6 py-3 fw-bold"> Name </th>
-                <th scope="col" class="px-6 py-3"> Email </th>
-                <th scope="col" class="px-6 py-3"> Feedback </th>
+                <th scope="col" class="px-6 py-3"><i class="fa-regular fa-user me-1 max-lg:hidden"></i> Name </th>
+                <th scope="col" class="px-6 py-3"><i class="fa-regular fa-envelope me-1 max-lg:hidden"></i> Email </th>
+                <th scope="col" class="px-6 py-3"><i class="fa-regular fa-comment-dots me-1 max-lg:hidden"></i> Feedback </th>
             </tr>
         </thead>
 
         <tbody class="text-lg max-sm:p-6">
             {#each $feedbackStore as feedback}
                 <tr
-                class="border-2 border-gray-500 hover:bg-slate-200"
+                class="border-b-2 border-gray-200 hover:bg-slate-200"
                 >
                 <td data-th="Name" class="px-6 py-4 max-md:py-2 max-sm:py-2">
                     {feedback.name}
