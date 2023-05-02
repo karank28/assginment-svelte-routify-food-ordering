@@ -4,9 +4,9 @@
     import classnames from "vest/classnames";
     import { foodstore } from "../stores/FoodStore";
 
-    import Input from "../Components/Input.svelte";
-    import TextArea from "../Components/TextArea.svelte";
-    import InputPrice from "../Components/InputPrice.svelte";
+    import Input from "../components/Input.svelte";
+    import TextArea from "../components/TextArea.svelte";
+    import InputPrice from "../components/InputPrice.svelte";
 
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
@@ -44,6 +44,7 @@
 
     let add_item_toggle : boolean = false;   
     let update_item_toggle : boolean = false;
+    let delete_item_toggle : boolean = false;
 
     function toggleForm(operation:string):void{
         
@@ -61,18 +62,24 @@
         if(operation === 'update'){
             update_item_toggle = !update_item_toggle
         }
-        
+
+        if(operation === 'delete'){
+            delete_item_toggle = !delete_item_toggle
+            itemformState = {
+                item_name: "",
+            }
+        }
     }
 
     function closeToggle():void {
         add_item_toggle = !add_item_toggle
-        
     }
     const handleSubmit = (item) => {
         const { item_id, item_img, item_name, description, quantity, price , newprice } = itemformState;
         const newItem = { item_id, item_img, item_name, description, quantity, price , newprice };
         
         foodstore.update((items) => [...items, newItem]);
+        toastr.options.positionClass = 'toast-bottom-right'
         toastr.success("Item Added successfully!");
     };
 
@@ -91,6 +98,7 @@
                 index === selectedItemIndex ? updatedItem : item
             )
         );
+        toastr.options.positionClass = 'toast-bottom-right'
         toastr.success("Item updated successfully!");
 
         itemformState = initialFormState;
@@ -99,15 +107,16 @@
 
     const handleDelete = (index) => {
         foodstore.update((items) => items.filter((_, i) => i !== index));
+        toastr.options.positionClass = 'toast-bottom-right'
         toastr.success(`Item deleted successfully!`)
     };
 
 </script>
 
-<div class="w-full p-6 ">
-    <div class="flex justify-end z-[-1] my-3"> 
+<div class="w-full">
+    <div class="flex border-y-2 justify-end z-[-1] p-4 max-md:justify-center">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold uppercase text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-1/2 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new item</div> 
+        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold uppercase text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-2/4 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new item</div> 
     </div>
 </div>
 
@@ -217,17 +226,44 @@
             </div>
         </div>
     </div>
-</div>
 
-<div class="w-full px-6 max-lg:-mt-9">
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-    <div class="text-3xl font-bold text-center">
-        List of Items<i class="fa-solid fa-utensils mx-2"></i> 
+    <div class="{delete_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
+        <div class="w-full mt-48 flex justify-center">
+            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
+        
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div on:click={()=> toggleForm('delete')} class="my-1 text-end cursor-pointer text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+                <form on:submit|preventDefault={handleDelete} action="#">
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <Input
+                            name="item_name"
+                            label="Item Name"
+                            bind:value={itemformState.item_name}
+                            onInput={handleChange}
+                            validityclass={cn("item_name")}
+                            messages={result.getErrors("item_name")}
+                        />
+                    </div>
+
+                    <div class="mt-4 flex">
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={()=> toggleForm('delete')}>Delete</button>  
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <hr class="h-px my-5 bg-gray-200 border-0" />
 </div>
 
-<div class="w-full p-6 max-sm:-mt-7">
+<div class="w-full">
+    <div class="border-b-2 text-3xl font-bold text-center py-4">
+        List of Items<i class="fa-solid fa-utensils mx-2"></i>  
+    </div>
+</div>
+
+<div class="w-full p-6">
     <div class="grid justify-center items-center xl:grid-cols-4 gap-5 lg:grid-cols-3 md:grid-cols-2 max-sm:grid-cols-1">
         {#each $foodstore as item, index}
         <div class="w-full p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-pointer hover:shadow-xl hover:border-green-600">
@@ -253,7 +289,7 @@
                         <div class="font-bold uppercase">Edit<i class="fa-regular fa-pen-to-square ms-2" /></div>
                     </div>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <div on:click={() => handleDelete(index)}
+                    <div on:click={() => delete_item_toggle = !delete_item_toggle}
                         class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:shadow-xl max-sm:text-sm">
                         <div class="font-bold uppercase">Delete<i class="fa-regular fa-trash-can ms-2" /></div>
                     </div>

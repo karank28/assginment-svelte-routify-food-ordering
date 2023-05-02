@@ -1,10 +1,10 @@
 <script lang="ts">
 
     import suite from "../validation/feedback_suite";
-    import Input from "../Components/Input.svelte";
+    import Input from "../components/Input.svelte";
     import classnames from "vest/classnames";
     import { feedbackStore } from "../stores/FeedbackStore";
-    import TextArea from "../Components/TextArea.svelte";
+    import TextArea from "../components/TextArea.svelte";
 
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
@@ -40,19 +40,20 @@
         const { name, email, feedback } = formState;
         const newFeedback = { name, email, feedback };
         feedbackStore.update(feedbacks => [...feedbacks, newFeedback]);
+        toastr.options.positionClass = 'toast-bottom-right'
         toastr.success('Feedback submitted successfully!')
         formState = initialFormState;
     };
 
 </script>
 
-<div class="w-full p-6">
-    <div class="text-3xl font-bold text-center">
-        Feedback
+<div class="w-full">
+    <div class="border-y-2 text-3xl font-bold text-center py-4">
+        Feedback<i class="fa-regular fa-comments mx-2" /> 
     </div>
-    <hr class="h-px my-5 bg-gray-200 border-0" />
 </div>
-<div class="w-full px-6 flex justify-between max-sm:flex-col">
+
+<div class="w-full p-6 flex justify-between max-sm:flex-col">
 
     <form on:submit|preventDefault = {handleSubmit} action="" class="w-96 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
         <div class="my-5">

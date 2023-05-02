@@ -20,18 +20,23 @@
       fooditems = value;
     });
 
+    let isAdded:boolean = false;
+    let isClicked:boolean = false;
     const handleSubmit = () => {
-        const quantity = { ...item_details, quantity: count };
-        const newPrice = count * item_details.price;
-        const itemPrice = { ...quantity, newprice: newPrice };
-        cartstore.update((items) => [...items, itemPrice]);
-        toastr.success('Added to cart successfully!')
+        if(!isClicked){
+            isClicked = true;
+            isAdded = true;
+            const quantity = { ...item_details, quantity: count };
+            cartstore.update((items) => [...items,quantity]);
+            toastr.options.positionClass = 'toast-bottom-right'
+            toastr.success('Added to cart successfully!')
+        }
     };
     
 </script>
 
 <div class="w-full p-6">
-    <div class="mx-3 p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
+    <div class="mx-3 p-6 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
         
         <form on:submit|preventDefault={() => handleSubmit()} >
             <div class="grid grid-cols-3 gap-3 max-xl:grid-cols-2 max-md:grid-cols-1">
@@ -56,9 +61,9 @@
                             </div>
     
                             <div class=" text-lg py-1">
-                                <button type="button" on:click={()=>{ (count <=1 )? '' : count--; }}><span class="border-2 px-2 rounded-lg">-</span></button>
+                                <button disabled={isClicked} type="button" on:click={()=>{ (count <=1 )? '' : count--; }}><span class="border-2 px-2 rounded-lg">-</span></button>
                                 <span>{count}</span>
-                                <button type="button" on:click={()=>{count++;}}><span class="border-2 px-2 rounded-lg">+</span></button>
+                                <button disabled={isClicked} type="button" on:click={()=>{count++;}}><span class="border-2 px-2 rounded-lg">+</span></button>
                             </div>
                             
                         </div>
@@ -79,7 +84,10 @@
                         </a>
                         
                         <div class="w-full">
-                            <button type="submit" class="w-full bg-amber-400 text-black font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-amber-500 hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus ms-2"></i></span></button>
+                            <button disabled={isClicked} type="submit" class="w-full bg-amber-400 text-black font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-amber-500 hover:shadow-xl max-sm:text-sm"><span>
+                                {isAdded ? 'Added' : 'Add'}<i class="fa-solid fa-cart-plus ms-2"></i></span>
+                            </button>
+                            
                         </div>
                     </div>
                 </div>

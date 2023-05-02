@@ -7,8 +7,30 @@
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
 
+    let existingItem:any ;
     const handleSubmit = (item) => {
-        cartstore.update((items) => [...items, item]);
+        cartstore.subscribe((items) => {
+            existingItem = items.find((i) => i.item_id === item.item_id);
+        });
+
+        if (existingItem) {
+            const updatedItem = {
+            ...existingItem,
+            quantity: existingItem.quantity + 1,
+            };
+
+            cartstore.update((items) =>
+            items.map((i) => (i.item_id === item.item_id ? updatedItem : i))
+            );
+
+        } else {
+            const newItem = {
+            ...item,
+            quantity: 1,
+            };
+            cartstore.update((items) => [...items, newItem]);
+        }
+        toastr.options.positionClass = 'toast-bottom-right'
         toastr.success('Added to cart successfully!')
     };
 
@@ -36,20 +58,18 @@
 
 </script>
 
-<div class="w-full relative text-center cursor-default drop-shadow-xl mt-5">
+<div class="w-full relative text-center cursor-default drop-shadow-xl">
     <!-- svelte-ignore a11y-img-redundant-alt -->
     <img class="object-fill h-96 w-full opacity-150 max-lg:h-64 max-md:h-48 max-sm:h-32 " src="{images[currentIndex]}" alt="image description">
 </div>
 
-<div class="w-full p-6">
-    <hr class="h-px mb-5 bg-gray-200 border-0" />
-    <div class="text-3xl font-bold text-center">
+<div class="w-full">
+    <div class="border-y-2 text-3xl font-bold text-center py-4">
         Explore the Taste<i class="fa-solid fa-utensils mx-2"></i> 
     </div>
-    <hr class="h-px my-5 bg-gray-200 border-0 md:my-2 sm:my-1" />
 </div>
 
-<div class="w-full p-6 max-sm:-mt-10">
+<div class="w-full p-6">
     <div class="grid justify-center items-center xl:grid-cols-4 gap-5 lg:grid-cols-3 md:grid-cols-2 max-sm:grid-cols-1">
         {#each $foodstore as item}
         
@@ -76,7 +96,9 @@
                         </a>
                     </div>
                     <div class="w-full">
-                        <button type="submit" class="w-full bg-amber-400 text-black font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-amber-500 hover:shadow-xl max-sm:text-sm"><span>Add<i class="fa-solid fa-cart-plus ms-2"></i></span></button>
+                        <button type="submit" class="w-full bg-amber-400 text-black font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-amber-500 hover:shadow-xl max-sm:text-sm">
+                            <span>Add<i class="fa-solid fa-cart-plus ms-2"></i></span>
+                        </button>
                     </div>
                 </div>
             </form>   

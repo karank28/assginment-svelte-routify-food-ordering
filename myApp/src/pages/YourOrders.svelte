@@ -7,37 +7,37 @@
 
     let orderItems;
     orderstore.subscribe(value => {
-      orderItems = value;
+        orderItems = value;
     });
 
     const handleDelete = (index) => {
         orderstore.update((items) => items.filter((_, i) => i !== index));
-        toastr.success("Oreder Cancelled!")
+        toastr.options.positionClass = 'toast-bottom-right'
+        toastr.success("Item removed from cart!")
     };
+
 </script>
 
-<div class="w-full p-6">
-
-    <div class="text-3xl font-bold text-center">
-        Your Orders!!
+<div class="w-full">
+    <div class="border-y-2 text-3xl font-bold text-center py-4">
+        Your Orders!! <i class="fa-solid fa-utensils mx-2"></i> 
     </div>
+</div>
 
-    <hr class="h-px my-5 bg-gray-200 border-0" />
-    
+<div class="w-full p-6">
     {#if orderItems.length === 0}
     <div class="flex flex-col items-center">
-        <div class="text-xl font-bold py-5">
-            Empty!!
-        </div>
         <div class="w-full">
             <img class="block mx-auto rounded-lg" src="./img/empty.png" alt="">
+        </div>
+        <div class="text-xl font-bold py-5">
+            It's Empty!!
         </div>
     </div>      
         
     {:else}
-
         {#each $orderstore as item, index}
-            <div class="w-full p-6 border-2 border-slate-700 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl hover:border-green-600">
+            <div class="w-full p-6 border-b-2 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
                 <form action="">
                     <div class="flex gap-5 max-md:flex-col">
 
@@ -71,13 +71,12 @@
                                         Price: &nbsp;
                                     </div>
                                     <div class="text-lg">
-                                        {item.newprice}
+                                        {item.price * item.quantity}
                                     </div>
-                                </div>
+                                </div>    
                             </div>
-    
+                            
                             <div class="w-1/2 flex text-center max-md:w-full max-sm:w-full">
-
                                 <div class="w-full mx-1 max-sm:me-0">
                                     <button on:click={() => handleDelete(index)} 
                                         class="w-full bg-red-600 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:text-white hover:shadow-xl max-sm:text-sm">
