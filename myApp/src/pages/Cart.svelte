@@ -50,7 +50,7 @@
     </div>
 </div>
 
-<div class="w-full p-6">
+<div class="w-full p-6 max-sm:p-0">
     {#if cartItems.length === 0}
     <div class="flex flex-col items-center">
          <div class="flex flex-col items-center">
@@ -69,11 +69,11 @@
                 <div class="flex gap-5 max-md:flex-col">
                     
                     <div class="w-1/2 max-md:w-full">
-                        <img class="object-cover h-60 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
+                        <img class="object-cover h-72 w-full rounded-lg shadow-xl dark:shadow-gray-80 max-md:h-60 max-sm:h-60" src="{item.item_img}" alt="">
                     </div>
 
                     <div class="w-full flex flex-col">
-                        <div class="h-48">
+                        <div class="h-60">
                             <div class="text-3xl font-bold py-1">
                                 {item.item_name}
                             </div>
