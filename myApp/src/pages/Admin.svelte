@@ -7,13 +7,17 @@
     import Input from "../components/Input.svelte";
     import TextArea from "../components/TextArea.svelte";
     import InputPrice from "../components/InputPrice.svelte";
+    import InputFile from "../components/InputFile.svelte";
+    import { InputImage } from "../stores/InputImageStore";
 
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
-
+  import Itemdetails from "./itemdetails.svelte";
+  import { get } from "svelte/store";
+    
     let itemformState: {
         item_id? :number;
-        item_img?;
+        item_img?: any ;
         item_name?: string;
         description?: string;
         quantity?: number;
@@ -23,7 +27,7 @@
 
     let result = suite.get();
 
-    const handleChange = (item_name) => {
+    const handleChange = (item_name:any) => {
         result = suite(itemformState, item_name);
     };
 
@@ -35,39 +39,25 @@
 
     $: disabled = !result.isValid();
 
-    const initialFormState = {
-        item_id: 0,
-        item_name: "",
-        description: "",
-        price: null,
-    };
-
     let add_item_toggle : boolean = false;   
     let update_item_toggle : boolean = false;
-    let delete_item_toggle : boolean = false;
 
     function toggleForm(operation:string):void{
         
         if(operation === 'insert'){    
             add_item_toggle = !add_item_toggle
-            
+
             itemformState = {
                 item_id : 0,
-                item_name: "",
-                description: "",
-                price: null
+                item_name: null,
+                description: null,
+                price: null,
+                item_img:null
             }
         }
 
         if(operation === 'update'){
             update_item_toggle = !update_item_toggle
-        }
-
-        if(operation === 'delete'){
-            delete_item_toggle = !delete_item_toggle
-            itemformState = {
-                item_name: "",
-            }
         }
     }
 
@@ -75,12 +65,14 @@
         add_item_toggle = !add_item_toggle
     }
     const handleSubmit = (item) => {
-        const { item_id, item_img, item_name, description, quantity, price , newprice } = itemformState;
-        const newItem = { item_id, item_img, item_name, description, quantity, price , newprice };
+        const { item_id, item_img, item_name, description, quantity, price } = itemformState;
+        const newItem = { item_id, item_img, item_name, description, quantity, price };
+
+        newItem.item_img = $InputImage;
         
         foodstore.update((items) => [...items, newItem]);
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success("Item Added successfully!");
+        toastr.success(`Item ${item_name} Added successfully!`);
     };
 
     let selectedItemIndex = null;
@@ -93,22 +85,23 @@
     const handleUpdate = () => {
         const { item_id, item_img, item_name, description, quantity, price , newprice } = itemformState;
         const updatedItem = { item_id, item_img, item_name, description, quantity, price , newprice };
+        updatedItem.item_img = $InputImage;
         foodstore.update((items) =>
             items.map((item, index) =>
                 index === selectedItemIndex ? updatedItem : item
             )
         );
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success("Item updated successfully!");
+        toastr.success(`Item ${item_name} Added successfully!`);
 
-        itemformState = initialFormState;
         selectedItemIndex = null;
     };
 
     const handleDelete = (index) => {
+        const deletedItem = get(foodstore)[index];
         foodstore.update((items) => items.filter((_, i) => i !== index));
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success(`Item deleted successfully!`)
+        toastr.success(`Item ${deletedItem.item_name} deleted successfully!`)
     };
 
 </script>
@@ -122,12 +115,15 @@
 
 <div class="w-full">
     <div class="{add_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
-        <div class="w-full mt-48 flex justify-center">
-            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
+        <div class="w-full mt-32 flex justify-center">
+            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
         
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={()=> toggleForm('insert')} class="my-1 text-end cursor-pointer text-lg">
-                    <i class="fa-solid fa-xmark"></i>
+                <div on:click={()=> toggleForm('insert')} class="my-1">
+                    <span class="flex justify-between">
+                        <div class="text-xl font-bold"><i class="fa-solid fa-user-pen me-2"></i>Admin Items</div> 
+                        <div class="cursor-pointer hover:text-red-600 -mt-3"><i class="fa-solid fa-xmark"></i></div> 
+                    </span>  
                 </div>
                 <form on:submit|preventDefault={handleSubmit} action="#">
                     <div class="my-3">
@@ -166,8 +162,20 @@
                         />
                     </div>
     
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <InputFile
+                            name="item_img"
+                            label="Select Image"
+                            bind:value={itemformState.item_img}
+                            onInput={handleChange}
+                            validityclass={cn("image")}
+                            messages={result.getErrors("image")}
+                        />
+                    </div>
+
                     <div class="mt-4">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={closeToggle}>Submit</button>
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm disabled:opacity-50 disabled:pointer-events-none" {disabled} on:click={closeToggle}>Submit</button>
                     </div>
                 </form>
             </div>
@@ -175,12 +183,15 @@
     </div>
 
     <div class="{update_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
-        <div class="w-full mt-48 flex justify-center">
-            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
+        <div class="w-full mt-32 flex justify-center">
+            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
         
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={()=> toggleForm('update')} class="my-1 text-end cursor-pointer text-lg">
-                    <i class="fa-solid fa-xmark"></i>
+                <div on:click={()=> toggleForm('update')} class="my-1">
+                    <span class="flex justify-between">
+                        <div class="text-xl font-bold"><i class="fa-solid fa-user-pen me-2"></i>Admin Items</div> 
+                        <div class="cursor-pointer hover:text-red-600 -mt-3"><i class="fa-solid fa-xmark"></i></div> 
+                    </span>  
                 </div>
                 <form on:submit|preventDefault={handleUpdate} action="#">
                     <div class="my-3">
@@ -218,38 +229,21 @@
                             messages={result.getErrors("price")}
                         />
                     </div>
-    
-                    <div class="mt-4 flex">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={()=> toggleForm('update')}>Update</button>  
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
-    <div class="{delete_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
-        <div class="w-full mt-48 flex justify-center">
-            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-lg:me-5 max-sm:w-full">
-        
-                <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={()=> toggleForm('delete')} class="my-1 text-end cursor-pointer text-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </div>
-                <form on:submit|preventDefault={handleDelete} action="#">
                     <div class="my-3">
                         <!-- svelte-ignore missing-declaration -->
-                        <Input
-                            name="item_name"
-                            label="Item Name"
-                            bind:value={itemformState.item_name}
+                        <InputFile
+                            name="item_img"
+                            label="Select Image"
+                            bind:value={itemformState.item_img}
                             onInput={handleChange}
-                            validityclass={cn("item_name")}
-                            messages={result.getErrors("item_name")}
+                            validityclass={cn("image")}
+                            messages={result.getErrors("image")}
                         />
                     </div>
-
+    
                     <div class="mt-4 flex">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:scale-105 hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" {disabled} on:click={()=> toggleForm('delete')}>Delete</button>  
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm disabled:opacity-50 disabled:pointer-events-none" {disabled} on:click={()=> toggleForm('update')}>Update</button>  
                     </div>
                 </form>
             </div>
@@ -259,7 +253,7 @@
 
 <div class="w-full">
     <div class="border-b-2 text-3xl font-bold text-center py-4">
-        List of Items<i class="fa-solid fa-utensils mx-2"></i>  
+        <i class="fa-solid fa-utensils mx-2" />List of Items  
     </div>
 </div>
 
@@ -269,9 +263,11 @@
         <div class="w-full p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 cursor-pointer hover:shadow-xl hover:border-green-600">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
                 <div class="w-full">
-                    <img class="object-cover h-48 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
+                    <img class="object-cover h-48 w-full border-2 border-slate-700 rounded-lg shadow-xl dark:shadow-gray-80 transition duration-200 ease-in-out hover:scale-110" src="{item.item_img}" alt="">
+                    <!-- svelte-ignore a11y-img-redundant-alt -->
+                    
                 </div>
-                <div class="h-40 p-2">
+                <div class="h-44 p-2">
                     <div class="text-xl font-bold py-1">
                         {item.item_name}
                     </div>
@@ -289,7 +285,7 @@
                         <div class="font-bold uppercase">Edit<i class="fa-regular fa-pen-to-square ms-2" /></div>
                     </div>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <div on:click={() => delete_item_toggle = !delete_item_toggle}
+                    <div on:click={() => handleDelete(index)}
                         class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:shadow-xl max-sm:text-sm">
                         <div class="font-bold uppercase">Delete<i class="fa-regular fa-trash-can ms-2" /></div>
                     </div>
@@ -299,6 +295,3 @@
         {/each}    
     </div>
 </div>
-
-
-

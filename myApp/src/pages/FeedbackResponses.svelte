@@ -6,7 +6,7 @@
 
 <div class="w-full">
     <div class="border-y-2 text-3xl font-bold text-center py-4">
-        Responses of Feedback Forms<i class="fa-regular fa-comment-dots mx-2"></i>
+        <i class="fa-regular fa-comment-dots mx-2" />Responses of Feedback Forms
     </div>
 </div>
 

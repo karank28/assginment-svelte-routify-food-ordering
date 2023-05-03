@@ -49,7 +49,7 @@
 
 <div class="w-full">
     <div class="border-y-2 text-3xl font-bold text-center py-4">
-        Feedback<i class="fa-regular fa-comments mx-2" /> 
+        <i class="fa-regular fa-comments mx-2" />Feedback 
     </div>
 </div>
 
@@ -89,11 +89,9 @@
                 messages = {result.getErrors('feedback')}
             />
         </div>
-
         <div class="mt-7 flex">
             <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm" disabled={disabled}>Submit</button>
         </div>
-
     </form>
 
     <div class="w-96 p-6 flex-rows text-lg border-2 border-slate-700 rounded-2xl hover:border-green-600 hover:shadow-xl max-lg:w-2/4 max-sm:w-full max-sm:mt-5">

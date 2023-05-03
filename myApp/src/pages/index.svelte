@@ -65,7 +65,7 @@
 
 <div class="w-full">
     <div class="border-y-2 text-3xl font-bold text-center py-4">
-        Explore the Taste<i class="fa-solid fa-utensils mx-2"></i> 
+        <i class="fa-solid fa-utensils mx-2" />Explore the Taste
     </div>
 </div>
 
@@ -76,9 +76,9 @@
         <div class="w-full p-6 border-2 border-slate-700 rounded-2xl flex-col flex-wrap justify-center items-center transition duration-400 hover:shadow-xl hover:border-green-600">
             <form on:submit|preventDefault={() => handleSubmit(item)} action="">
                 <div class="w-full">
-                    <img class="object-cover h-48 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item.item_img}" alt="">
+                    <img class="object-cover h-48 w-full border-2 border-slate-700 rounded-lg shadow-xl dark:shadow-gray-80 transition duration-200 ease-in-out hover:scale-110" src="{item.item_img}" alt="">
                 </div>
-                <div class="h-40 p-2">
+                <div class="h-44 p-2">
                     <div class="text-xl font-bold py-1">
                         {item.item_name}
                     </div>

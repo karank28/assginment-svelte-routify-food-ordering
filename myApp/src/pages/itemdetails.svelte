@@ -35,18 +35,24 @@
     
 </script>
 
-<div class="w-full p-6">
-    <div class="mx-3 p-6 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
+<div class="w-full">
+    <div class="border-y-2 text-3xl font-bold text-center py-4">
+        {item_details.item_name} Details
+    </div>
+</div>
+
+<div class="w-full p-6 max-sm:p-0">
+    <div class="p-6 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
         
         <form on:submit|preventDefault={() => handleSubmit()} >
             <div class="grid grid-cols-3 gap-3 max-xl:grid-cols-2 max-md:grid-cols-1">
                 
                 <div class="w-full">
-                    <img class="object-cover h-60 w-full rounded-lg shadow-xl dark:shadow-gray-80" src="{item_details.item_img}" alt="">
+                    <img class="object-cover h-72 w-full rounded-lg shadow-xl dark:shadow-gray-80 max-md:h-60 max-sm:h-60" src="{item_details.item_img}" alt="">
                 </div>
 
                 <div class="p-2">
-                    <div class="h-48">
+                    <div class="h-60">
                         <div class="text-3xl font-bold py-1">
                             {item_details.item_name}
                         </div>
