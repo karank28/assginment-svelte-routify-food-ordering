@@ -27,6 +27,10 @@ import { create, test, enforce, only } from 'vest';
             enforce(data.price).isNumeric();
         });
 
+        test('item_img', 'This field is required', () => {
+            enforce(data.item_img).isNotBlank()
+        });
+
     });
 
 export default suite;

@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as _ from "lodash";
+    import { get } from "svelte/store";
     import suite from "../validation/item_suite";
     import classnames from "vest/classnames";
     import { foodstore } from "../stores/FoodStore";
@@ -12,17 +13,14 @@
 
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
-  import Itemdetails from "./itemdetails.svelte";
-  import { get } from "svelte/store";
-    
+
     let itemformState: {
         item_id? :number;
-        item_img?: any ;
+        item_img?: string;
         item_name?: string;
         description?: string;
         quantity?: number;
         price?: number;
-        newprice?: number;
     } = {};
 
     let result = suite.get();
@@ -41,38 +39,42 @@
 
     let add_item_toggle : boolean = false;   
     let update_item_toggle : boolean = false;
+    let delete_item_toggle : boolean = false;
+    let deleteItemName: string = '';
 
     function toggleForm(operation:string):void{
-        
-        if(operation === 'insert'){    
-            add_item_toggle = !add_item_toggle
-
+        if(operation === 'insert'){
             itemformState = {
                 item_id : 0,
                 item_name: null,
                 description: null,
                 price: null,
-                item_img:null
             }
+            disabled=true;
+            add_item_toggle = !add_item_toggle
+            suite.reset();
         }
 
         if(operation === 'update'){
             update_item_toggle = !update_item_toggle
+        }
+
+        if(operation === 'delete'){
+            delete_item_toggle = !delete_item_toggle;
         }
     }
 
     function closeToggle():void {
         add_item_toggle = !add_item_toggle
     }
+
     const handleSubmit = (item) => {
         const { item_id, item_img, item_name, description, quantity, price } = itemformState;
         const newItem = { item_id, item_img, item_name, description, quantity, price };
-
         newItem.item_img = $InputImage;
-        
         foodstore.update((items) => [...items, newItem]);
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success(`Item ${item_name} Added successfully!`);
+        toastr.success(`${item_name} Added`);
     };
 
     let selectedItemIndex = null;
@@ -83,25 +85,41 @@
     };
 
     const handleUpdate = () => {
-        const { item_id, item_img, item_name, description, quantity, price , newprice } = itemformState;
-        const updatedItem = { item_id, item_img, item_name, description, quantity, price , newprice };
+        const { item_id, item_img, item_name, description, quantity, price } = itemformState;
+        const updatedItem = { item_id, item_img, item_name, description, quantity, price };
+
         updatedItem.item_img = $InputImage;
+        
         foodstore.update((items) =>
             items.map((item, index) =>
                 index === selectedItemIndex ? updatedItem : item
             )
         );
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success(`Item ${item_name} Added successfully!`);
+        toastr.success(`${item_name} Updated`);
 
         selectedItemIndex = null;
     };
 
-    const handleDelete = (index) => {
+    const handledeleteItem = (index) => {
+        selectedItemIndex = index;
+        deleteItemName = foodstore[index].item_name;
+        toggleForm('delete');
+    };
+    
+    const handleDelete = () => {
+        const index = selectedItemIndex;
         const deletedItem = get(foodstore)[index];
-        foodstore.update((items) => items.filter((_, i) => i !== index));
-        toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success(`Item ${deletedItem.item_name} deleted successfully!`)
+        if (deleteItemName === deletedItem.item_name) {
+            foodstore.update(items => {
+                const newItems = [...items];
+                newItems.splice(index, 1);
+                return newItems;
+            });
+            toastr.options.positionClass = 'toast-bottom-right';
+            toastr.success(`${deletedItem.item_name} Deleted`);
+            toggleForm('delete');
+        }
     };
 
 </script>
@@ -109,7 +127,7 @@
 <div class="w-full">
     <div class="flex border-y-2 justify-end z-[-1] p-4 max-md:justify-center">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold uppercase text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-2/4 max-sm:w-full max-sm:text-sm"><i class="fa-solid fa-plus mx-2"></i>Add new item</div> 
+        <div on:click={()=> toggleForm('insert')} class="w-1/4 bg-slate-700 text-white font-bold uppercase text-center py-2 px-4 rounded-lg transition cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-md:w-2/4 max-sm:w-full max-sm:text-sm">Add new item<i class="fa-solid fa-plus mx-2"></i></div> 
     </div>
 </div>
 
@@ -119,12 +137,13 @@
             <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
         
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={()=> toggleForm('insert')} class="my-1">
+                <div  class="my-1 pb-2 border-b border-slate-600">
                     <span class="flex justify-between">
-                        <div class="text-xl font-bold"><i class="fa-solid fa-user-pen me-2"></i>Admin Items</div> 
-                        <div class="cursor-pointer hover:text-red-600 -mt-3"><i class="fa-solid fa-xmark"></i></div> 
+                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-solid fa-plus me-2"></i>Add Item</div> 
+                        <div on:click={()=> toggleForm('insert')} class="cursor-pointer hover:text-red-600"><i class="fa-solid fa-xmark"></i></div> 
                     </span>  
                 </div>
+
                 <form on:submit|preventDefault={handleSubmit} action="#">
                     <div class="my-3">
                         <!-- svelte-ignore missing-declaration -->
@@ -187,12 +206,13 @@
             <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
         
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div on:click={()=> toggleForm('update')} class="my-1">
+                <div  class="my-1 pb-2 border-b border-slate-600">
                     <span class="flex justify-between">
-                        <div class="text-xl font-bold"><i class="fa-solid fa-user-pen me-2"></i>Admin Items</div> 
-                        <div class="cursor-pointer hover:text-red-600 -mt-3"><i class="fa-solid fa-xmark"></i></div> 
+                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-pen-to-square me-2" />Update item</div> 
+                        <div on:click={()=> toggleForm('update')} class="cursor-pointer hover:text-red-600"><i class="fa-solid fa-xmark"></i></div> 
                     </span>  
                 </div>
+
                 <form on:submit|preventDefault={handleUpdate} action="#">
                     <div class="my-3">
                         <!-- svelte-ignore missing-declaration -->
@@ -249,6 +269,38 @@
             </div>
         </div>
     </div>
+
+    <div class="{delete_item_toggle? '':'hidden'} fixed bottom-0 left-0 w-full h-full bg-slate-500 bg-opacity-75 flex justify-center">
+        <div class="w-full mt-32 flex justify-center">
+            <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
+        
+                <!-- svelte-ignore a11y-click-events-have-key-events -->
+                <div  class="my-1 pb-2 border-b border-slate-600">
+                    <span class="flex justify-between">
+                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-trash-can me-2" />Delete Item</div> 
+                        <div on:click={()=> toggleForm('delete')} class="cursor-pointer hover:text-red-600"><i class="fa-solid fa-xmark"></i></div> 
+                    </span>  
+                </div>
+
+                <form on:submit|preventDefault={handleDelete} action="#">
+                    <div class="my-3">
+                        <!-- svelte-ignore missing-declaration -->
+                        <Input
+                            name="item_name"
+                            label="Confirm name"
+                            bind:value={deleteItemName}
+                            validityclass={cn("item_name")}
+                            messages={result.getErrors("item_name")}
+                        />
+                    </div>
+    
+                    <div class="mt-4">
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-600 hover:shadow-xl max-sm:text-sm">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="w-full">
@@ -285,7 +337,7 @@
                         <div class="font-bold uppercase">Edit<i class="fa-regular fa-pen-to-square ms-2" /></div>
                     </div>
                     <!-- svelte-ignore a11y-click-events-have-key-events -->
-                    <div on:click={() => handleDelete(index)}
+                    <div on:click={() => {toggleForm('delete'); handledeleteItem(index)}}
                         class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:shadow-xl max-sm:text-sm">
                         <div class="font-bold uppercase">Delete<i class="fa-regular fa-trash-can ms-2" /></div>
                     </div>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as _ from "lodash";
+    import { get } from "svelte/store";
     import { orderstore } from "../stores/OrderStore";
 
     import toastr from 'toastr';
@@ -10,10 +11,18 @@
         orderItems = value;
     });
 
-    const handleDelete = (index) => {
-        orderstore.update((items) => items.filter((_, i) => i !== index));
+    let selectedItemIndex = null;
+
+    const handleDelete = () => {
+        const index = selectedItemIndex;
+        const cancelledOrder = get(orderstore)[index];
+        orderstore.update(items => {
+            const newItems = [...items];
+            newItems.splice(index, 1);
+            return newItems;
+        });
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success("Item removed from cart!")
+        toastr.success(`${cancelledOrder.item_name} Cancelled`);
     };
 
 </script>
@@ -78,7 +87,7 @@
                             
                             <div class="w-1/2 flex text-center max-md:w-full max-sm:w-full">
                                 <div class="w-full mx-1 max-sm:mx-0">
-                                    <button on:click={() => handleDelete(index)} 
+                                    <button on:click={()=> handleDelete()} 
                                         class="w-full bg-red-600 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:text-white hover:shadow-xl max-sm:text-sm">
                                         <i class="fa-regular fa-trash-can ms-2" />
                                         <span>Cancel order</span>

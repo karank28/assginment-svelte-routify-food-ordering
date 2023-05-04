@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Routes } from './enums/routes';
-	import { url , goto } from "@sveltech/routify";
-	import { cartCount } from './stores/CartStore';
+	import { Routes } from "../enums/routes";
+	import { goto } from "@sveltech/routify";
+	import { cartCount } from '../stores/CartStore';
   
   	let showNavbar:boolean = false;
 	function toggleNavbar():void {

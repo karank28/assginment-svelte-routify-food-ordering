@@ -1,5 +1,6 @@
 <script lang="ts">
     import * as _ from "lodash";
+    import { get } from "svelte/store";
     import { cartstore } from '../stores/CartStore';
     import { orderstore } from "../stores/OrderStore";
 
@@ -38,15 +39,16 @@
     };
 
     const handleDelete = (index) => {
+        const deletedItem = get(cartstore)[index];
         cartstore.update((items) => items.filter((_, i) => i !== index));
         toastr.options.positionClass = 'toast-bottom-right'
-        toastr.success("Item removed from cart!")
+        toastr.success(`${deletedItem.item_name} Removed`);
     };
 </script>
 
 <div class="w-full">
     <div class="border-y-2 text-3xl font-bold text-center py-4">
-        Cart list <i class="fa-solid fa-cart-plus mx-2"></i>
+        <i class="fa-solid fa-cart-plus mx-2"></i>Cart list 
     </div>
 </div>
 
