@@ -1,11 +1,9 @@
 <script lang="ts">
-
     import suite from "../validation/feedback_suite";
-    import Input from "../components/Input.svelte";
+    import Input from "../Components/Input.svelte";
     import classnames from "vest/classnames";
     import { feedbackStore } from "../stores/FeedbackStore";
-    import TextArea from "../components/TextArea.svelte";
-
+    import TextArea from "../Components/TextArea.svelte";
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
 
@@ -44,17 +42,14 @@
         toastr.success('Feedback submitted successfully!')
         formState = initialFormState;
     };
-
 </script>
 
 <div class="w-full">
-    <div class="border-y-2 text-3xl font-bold text-center py-4">
+    <div class="border-y-2 text-3xl font-bold text-center py-4 max-sm:text-2xl">
         <i class="fa-regular fa-comments mx-2" />Feedback 
     </div>
 </div>
-
 <div class="w-full p-6 flex justify-center max-sm:flex-col">
-
     <div class="w-2/4 flex border-2 border-slate-700 rounded-2xl hover:border-green-600 max-sm:w-full max-sm:flex-col max-lg:w-full">
         <div class="w-full flex justify-center items-center">
             <div>
@@ -75,7 +70,6 @@
                         messages = {result.getErrors('name')}
                     />
                 </div>
-        
                 <div class="my-5">
                     <Input
                         name="email"
@@ -86,7 +80,6 @@
                         messages = {result.getErrors('email')}
                     />
                 </div>
-        
                 <div class="my-5">
                     <TextArea
                         name="feedback"
@@ -103,18 +96,4 @@
             </form>
         </div>
     </div>
-    
-    <!-- <div class="w-96 p-6 flex-rows text-lg border-2 border-slate-700 rounded-2xl hover:border-green-600 hover:shadow-xl max-lg:w-2/4 max-sm:w-full max-sm:mt-5">
-        
-        
-        <iframe class="w-full h-56 flex border-2 border-slate-700 rounded-xl transition hover:border-green-600 hover:shadow-xl hover:-translate-y-1" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.8780706790326!2d72.49672071494041!3d23.028248684950135!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84d5c5d6ba3f%3A0x2dac1a9a5d5f34be!2sIT%20Path%20Solutions!5e0!3m2!1sen!2sin!4v1680447378861!5m2!1sen!2sin" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        
-        <div class="flex-cols py-5 cursor-default">
-            <p class="text-3xl font-semibold py-1 max-sm:text-lg">Reach out to us</p>
-            <p class="text-base py-1 max-sm:text-sm">Located in: Binori B Square 1</p>
-            <p class="text-base py-1 max-sm:text-sm">Binori B Square 1, 801, 8th floor, BRTS road</p>
-            <p class="text-base py-1 max-sm:text-sm">Ambli Road, Ahmedabad</p>
-            <p class="text-base py-1 max-sm:text-sm">Gujarat - 380058</p>
-        </div>
-    </div> -->
 </div>  

@@ -1,6 +1,6 @@
 import { writable } from 'svelte/store';
 
-export const InputImage = writable('');
+export const InputImage = writable(null as string);
 
 export function handleFileInput(image){
     let reader = new FileReader();
