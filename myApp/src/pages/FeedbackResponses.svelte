@@ -1,15 +1,13 @@
 <script lang="ts">
     import * as _ from "lodash";
     import { feedbackStore } from "../stores/FeedbackStore";
-    
 </script>
 
 <div class="w-full">
-    <div class="border-y-2 text-3xl font-bold text-center py-4">
+    <div class="border-y-2 text-3xl font-bold text-center py-4 max-sm:text-2xl">
         <i class="fa-regular fa-comment-dots mx-2" />Responses of Feedback Forms
     </div>
 </div>
-
 <div class="w-full p-6">
     <table class="w-full text-sm text-left rounded-xl">
         <thead class="text-lg font-semibold max-sm:text-base">
@@ -19,7 +17,6 @@
                 <th scope="col" class="px-6 py-3"><i class="fa-regular fa-comment-dots me-1 max-lg:hidden"></i> Feedback </th>
             </tr>
         </thead>
-
         <tbody class="text-lg max-sm:p-6">
             {#each $feedbackStore as feedback}
                 <tr

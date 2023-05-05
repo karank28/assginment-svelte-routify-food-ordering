@@ -1,7 +1,5 @@
 <script lang="ts">
-
     import { handleFileInput } from "../stores/InputImageStore";
-
     export let value = null;
     export let label = null;
     export let name = null
@@ -9,7 +7,6 @@
     export let messages = [];
     export let validityclass;
     export let onInput = (e) => {};
-
     let image;
 </script>
 

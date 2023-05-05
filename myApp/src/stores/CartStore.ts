@@ -5,7 +5,6 @@ export const cartstore = writable([
 
 export const cartCount = (() => {
     const { subscribe, set, update } = writable(0);
-  
     const count = () => {
       let total = 0;
       cartstore.subscribe((items) => {

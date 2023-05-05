@@ -3,7 +3,6 @@
     import { get } from "svelte/store";
     import { cartstore } from '../stores/CartStore';
     import { orderstore } from "../stores/OrderStore";
-
     import toastr from 'toastr';
     import 'toastr/build/toastr.min.css';
 
@@ -14,7 +13,6 @@
 
     let existingItem:any ;
     const handleSubmit = (item) => {
-        
         orderstore.subscribe((items) => {
             existingItem = items.find((i) => i.item_id === item.item_id);
         });
@@ -35,7 +33,6 @@
             toastr.options.positionClass = 'toast-bottom-right'
             toastr.success("Order Confiremd!");
         }
-
     };
 
     const handleDelete = (index) => {
@@ -47,11 +44,10 @@
 </script>
 
 <div class="w-full">
-    <div class="border-y-2 text-3xl font-bold text-center py-4">
+    <div class="border-y-2 text-3xl font-bold text-center py-4 max-sm:text-2xl">
         <i class="fa-solid fa-cart-plus mx-2"></i>Cart list 
     </div>
 </div>
-
 <div class="w-full p-6 max-sm:p-0">
     {#if cartItems.length === 0}
     <div class="flex flex-col items-center">
@@ -98,9 +94,7 @@
                                         <span class="border-2 px-2 rounded-lg">+</span>
                                     </button>
                                 </div>
-                                
                             </div>
-
                             <div class="flex">
                                 <div class="text-xl font-bold">
                                     Price: &nbsp;
@@ -110,7 +104,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="lg:w-1/2 flex text-center max-md:w-full max-sm:w-full">
                             <div class="w-full mx-1 max-sm:ms-0">
                                 <button type="submit" 
@@ -119,7 +112,6 @@
                                     <i class="fa-regular fa-circle-check ms-2" />
                                 </button>
                             </div>
-
                             <div class="w-full mx-1 max-sm:me-0">
                                 <button on:click={() => handleDelete(index)} 
                                     class="w-full bg-red-600 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:text-white hover:shadow-xl max-sm:text-sm">
