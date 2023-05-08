@@ -10,9 +10,7 @@
         orderItems = value;
     });
 
-    let selectedItemIndex = null;
-    const handleDelete = () => {
-        const index = selectedItemIndex;
+    const handleDelete = (index) => {
         const cancelledOrder = get(orderstore)[index];
         orderstore.update(items => {
             const newItems = [...items];
@@ -22,6 +20,7 @@
         toastr.options.positionClass = 'toast-bottom-right'
         toastr.success(`${cancelledOrder.item_name} Cancelled`);
     };
+
 
 </script>
 
@@ -41,9 +40,9 @@
         </div>
     </div>      
     {:else}
-        {#each $orderstore as item}
+        {#each $orderstore as item, index}
             <div class="w-full p-6 border-b-2 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
-                <form on:submit|preventDefault={handleDelete} action="">
+                <form on:submit|preventDefault={() => handleDelete(index)} action="">
                     <div class="flex gap-5 max-md:flex-col">
                         <div class="w-1/2 max-md:w-full">
                             <img class="object-cover h-72 w-full rounded-lg shadow-xl dark:shadow-gray-80 max-md:h-60 max-sm:h-60" src="{item.item_img}" alt="">
@@ -75,7 +74,7 @@
                             </div>
                             <div class="w-1/2 flex text-center max-md:w-full max-sm:w-full">
                                 <div class="w-full mx-1 max-sm:mx-0">
-                                    <button type="submit" 
+                                    <button type="submit"
                                         class="w-full bg-red-600 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:text-white hover:shadow-xl max-sm:text-sm">
                                         <i class="fa-regular fa-trash-can ms-2" />
                                         <span>Cancel order</span>

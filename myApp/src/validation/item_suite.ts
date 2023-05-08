@@ -7,15 +7,15 @@ import { create, test, enforce, only } from 'vest';
             enforce(data.item_name).isNotBlank();
         });
     
-        test('item_name', 'Please enter a valid name.', () => {
-            enforce(data.item_name).matches(/^[A-Za-z]/);
+        test('item_name', 'Please enter a valid name', () => {
+            enforce(data.item_name).isNotNumber().matches(/^[A-Za-z]+([ ][A-Za-z]+){0,}$/);
         });
         
         test('description', 'This field is required', () => {
             enforce(data.description).isNotBlank();
         });
 
-        test('description', 'Please enter a valid message.', () => {
+        test('description', 'Please enter a valid message', () => {
             enforce(data.description).matches(/^[A-Za-z]/);
         });
 
@@ -30,7 +30,6 @@ import { create, test, enforce, only } from 'vest';
         test('item_img', 'This field is required', () => {
             enforce(data.item_img).isNotBlank()
         });
-
     });
 
 export default suite;

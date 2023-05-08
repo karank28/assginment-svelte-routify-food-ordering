@@ -44,7 +44,7 @@
                 item_id : 0,
                 item_name: null,
                 description: null,
-                price: null,
+                price: null
             }
             disabled=true;
             add_item_toggle = !add_item_toggle
@@ -92,7 +92,9 @@
         selectedItemIndex = null;
     };
 
-    const findDeleteItem = (index) => {
+    let confirm_delete:string
+    const findDeleteItem = (index , del_item_name:string ) => {
+        confirm_delete = del_item_name
         selectedItemIndex = index;
         deleteItemName = foodstore[index].item_name;
         toggleForm('delete');
@@ -125,13 +127,14 @@
         <div class="w-full mt-32 flex justify-center">
             <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div  class="my-1 pb-2 border-b border-slate-600">
-                    <span class="flex justify-between">
-                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-solid fa-plus me-2"></i>Add Item</div> 
-                        <div on:click={()=> toggleForm('insert')} class="cursor-pointer hover:text-red-600"><i class="fa-solid fa-xmark"></i></div> 
-                    </span>  
-                </div>
                 <form on:submit|preventDefault={handleSubmit} action="#">
+                    <div class="my-1 pb-2 border-b border-slate-600">
+                        <span class="flex justify-between">
+                            <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-solid fa-plus me-2"></i>Add Item</div> 
+                            <div on:click={()=> toggleForm('insert')} class="cursor-pointer hover:text-red-600">
+                                <button type="reset"><i class="fa-solid fa-xmark"></i></button></div> 
+                        </span>  
+                    </div>
                     <div class="my-3">
                         <!-- svelte-ignore missing-declaration -->
                         <Input
@@ -168,13 +171,13 @@
                     <div class="my-3">
                         <!-- svelte-ignore missing-declaration -->
                         <InputFile
-                            name="item_img"
-                            label="Select Image"
-                            bind:value={itemformState.item_img}
-                            onInput={handleChange}
-                            validityclass={cn("image")}
-                            messages={result.getErrors("image")}
-                        />
+                        name="item_img"
+                        label="Select Image"
+                        bind:value={itemformState.item_img}
+                        onInput={handleChange}
+                        validityclass={cn("image")}
+                        messages={result.getErrors("image")}  
+                    />
                     </div>
                     <div class="mt-4">
                         <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm disabled:opacity-50 disabled:pointer-events-none" {disabled} on:click={addClose}>Submit</button>
@@ -187,13 +190,15 @@
         <div class="w-full mt-32 flex justify-center">
             <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <div  class="my-1 pb-2 border-b border-slate-600">
-                    <span class="flex justify-between">
-                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-pen-to-square me-2" />Update item</div> 
-                        <div on:click={()=> toggleForm('update')} class="cursor-pointer hover:text-red-600"><i class="fa-solid fa-xmark"></i></div> 
-                    </span>  
-                </div>
                 <form on:submit|preventDefault={handleUpdate} action="#">
+                    <div  class="my-1 pb-2 border-b border-slate-600">
+                        <span class="flex justify-between">
+                            <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-pen-to-square me-2" />Update item</div> 
+                            <div on:click={()=> toggleForm('update')} class="cursor-pointer hover:text-red-600">
+                                <button type="reset"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </span>  
+                    </div>
                     <div class="my-3">
                         <!-- svelte-ignore missing-declaration -->
                         <Input
@@ -252,7 +257,7 @@
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div  class="my-1 pb-2 border-b border-slate-600">
                     <span class="flex justify-between">
-                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-trash-can me-2" />Delete item</div> 
+                        <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-trash-can me-2" />Delete item </div> 
                         <div on:click={() => toggleForm('delete')} class="cursor-pointer hover:text-red-600"><i class="fa-solid fa-xmark"></i></div> 
                     </span>  
                 </div>
@@ -261,7 +266,7 @@
                         <!-- svelte-ignore missing-declaration -->
                         <Input
                             name="item_name"
-                            label="Confirm name"
+                            label="Confirm name - {confirm_delete}"
                             bind:value={deleteItemName}
                             validityclass={cn("item_name")}
                             messages={result.getErrors("item_name")}
@@ -305,7 +310,7 @@
                             <div class="font-bold uppercase">Edit<i class="fa-regular fa-pen-to-square ms-2" /></div>
                         </div>
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <div on:click={() => {toggleForm('delete'), findDeleteItem(index)}}
+                        <div on:click={() => {toggleForm('delete'), findDeleteItem(index, item.item_name)}}
                             class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:shadow-xl max-sm:text-sm">
                             <div class="font-bold uppercase">Delete<i class="fa-regular fa-trash-can ms-2" /></div>
                         </div>

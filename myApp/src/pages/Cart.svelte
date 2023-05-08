@@ -12,9 +12,14 @@
     });
 
     let existingItem:any ;
-    const handleSubmit = (item) => {
+    const handleSubmit = (item, index) => {
         orderstore.subscribe((items) => {
             existingItem = items.find((i) => i.item_id === item.item_id);
+        });
+        cartstore.update(items => {
+            const newItems = [...items];
+            newItems.splice(index, 1);
+            return newItems;
         });
 
         if (existingItem) {
@@ -25,22 +30,26 @@
             orderstore.update((items) =>
                 items.map((i) => (i.item_id === item.item_id ? updatedItem : i))
             );
-            toastr.options.positionClass = 'toast-bottom-right'
-            toastr.success("Already Order Confiremd!");
         }
         else {
             orderstore.update((items) => [...items, item]);
             toastr.options.positionClass = 'toast-bottom-right'
-            toastr.success("Order Confiremd!");
+            toastr.success(`${item.item_name} Ordered`);
         }
     };
 
     const handleDelete = (index) => {
-        const deletedItem = get(cartstore)[index];
-        cartstore.update((items) => items.filter((_, i) => i !== index));
+       const deletedItem = get(cartstore)[index];
+       cartstore.update(items => {
+            const newItems = [...items];
+            newItems.splice(index, 1);
+            return newItems;
+        });
         toastr.options.positionClass = 'toast-bottom-right'
         toastr.success(`${deletedItem.item_name} Removed`);
     };
+
+
 </script>
 
 <div class="w-full">
@@ -63,7 +72,7 @@
     {:else}
         {#each $cartstore as item, index}
         <div class="w-full p-6 border-b-2 rounded-2xl justify-center items-center transition duration-400 cursor-default hover:bg-slate-100 hover:shadow-xl">
-            <form on:submit|preventDefault={() => handleSubmit(item)} action="">
+            <form on:submit|preventDefault={() => handleSubmit(item, index)} action="">
                 <div class="flex gap-5 max-md:flex-col">
                     
                     <div class="w-1/2 max-md:w-full">
@@ -113,7 +122,7 @@
                                 </button>
                             </div>
                             <div class="w-full mx-1 max-sm:me-0">
-                                <button on:click={() => handleDelete(index)} 
+                                <button on:click|preventDefault={() => handleDelete(index)} 
                                     class="w-full bg-red-600 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:text-white hover:shadow-xl max-sm:text-sm">
                                     <span>Remove</span>
                                     <i class="fa-regular fa-trash-can ms-2" />
