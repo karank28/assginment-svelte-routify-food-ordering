@@ -36,6 +36,8 @@
     let add_item_toggle : boolean = false;   
     let update_item_toggle : boolean = false;
     let delete_item_toggle : boolean = false;
+    let isFormEdited = false;
+    let selectedItemIndex = null;
     let deleteItemName: string = '';
 
     function toggleForm(operation:string):void{
@@ -51,8 +53,10 @@
             suite.reset();
         }
         if(operation === 'update'){
+            isFormEdited = false;
             update_item_toggle = !update_item_toggle
         }
+
         if(operation === 'delete'){
             deleteItemName = ''
             delete_item_toggle = !delete_item_toggle;
@@ -72,10 +76,13 @@
         toastr.success(`${item_name} Added`);
     };
 
-    let selectedItemIndex = null;
     const findEditItem = (index) => {
         selectedItemIndex = index;
         itemformState = $foodstore[index];
+    };
+
+    const handleFormChange = () => {
+        isFormEdited = true;
     };
 
     const handleUpdate = () => {
@@ -90,18 +97,17 @@
         toastr.options.positionClass = 'toast-bottom-right'
         toastr.success(`${item_name} Updated`);
         selectedItemIndex = null;
+        isFormEdited = false;
     };
 
     let confirm_delete:string
     const findDeleteItem = (index , del_item_name:string ) => {
         confirm_delete = del_item_name
         selectedItemIndex = index;
-        deleteItemName = foodstore[index].item_name;
-        toggleForm('delete');
     };
     
-    const handleDelete = () => {
-        const index = selectedItemIndex;
+    const handleDelete = (index) => {
+        index = selectedItemIndex;
         const deletedItem = get(foodstore)[index];
         if (deleteItemName === deletedItem.item_name) {
             foodstore.update(items => {
@@ -190,12 +196,12 @@
         <div class="w-full mt-32 flex justify-center">
             <div class="w-96 absolute bg-slate-100 p-5 border-2 border-slate-700 rounded-2xl hover:border-green-600 max-lg:w-2/4 max-sm:w-80">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
-                <form on:submit|preventDefault={handleUpdate} action="#">
+                <form on:submit|preventDefault={handleUpdate} on:change={handleFormChange} action="#">
                     <div  class="my-1 pb-2 border-b border-slate-600">
                         <span class="flex justify-between">
                             <div class="text-xl font-bold cursor-default hover:text-green-600"><i class="fa-regular fa-pen-to-square me-2" />Update item</div> 
                             <div on:click={()=> toggleForm('update')} class="cursor-pointer hover:text-red-600">
-                                <button type="reset"><i class="fa-solid fa-xmark"></i></button>
+                                <i class="fa-solid fa-xmark"></i>
                             </div>
                         </span>  
                     </div>
@@ -239,12 +245,12 @@
                             label="Select Image"
                             bind:value={itemformState.item_img}
                             onInput={handleChange}
-                            validityclass={cn("image")}
-                            messages={result.getErrors("image")}
+                            validityclass={cn("item_image")}
+                            messages={result.getErrors("item_image")}
                         />
                     </div>
                     <div class="mt-4 flex">
-                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm disabled:opacity-50 disabled:pointer-events-none" on:click={()=> toggleForm('update')}>Update</button>  
+                        <button type="submit" class="w-full bg-slate-700 text-white font-bold uppercase me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-green-600 hover:text-black hover:shadow-xl max-sm:text-sm disabled:opacity-50 disabled:pointer-events-none" on:click={()=> toggleForm('update')} disabled={!isFormEdited}>Update</button>  
                     </div>
                 </form>
             </div>
@@ -310,7 +316,7 @@
                             <div class="font-bold uppercase">Edit<i class="fa-regular fa-pen-to-square ms-2" /></div>
                         </div>
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <div on:click={() => {toggleForm('delete'), findDeleteItem(index, item.item_name)}}
+                        <div on:click={() => {toggleForm('delete'),findDeleteItem(index, item.item_name)}}
                             class="w-full bg-red-600 text-white font-bold me-1 py-2 px-4 rounded-lg transition duration-400 cursor-pointer hover:bg-red-700 hover:shadow-xl max-sm:text-sm">
                             <div class="font-bold uppercase">Delete<i class="fa-regular fa-trash-can ms-2" /></div>
                         </div>

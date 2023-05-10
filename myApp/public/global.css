@@ -1,9 +1,5 @@
 body{
-	padding: 4.2rem 0 !important;
-}
-
-body .popup{
-    overflow: hidden;
+	padding: 3.7rem 0 !important;
 }
 
 @media screen and (max-width: 48em) {
@@ -25,5 +21,4 @@ body .popup{
 		font-weight: bold;
 		margin-right: 10px;
     }
-
 }
